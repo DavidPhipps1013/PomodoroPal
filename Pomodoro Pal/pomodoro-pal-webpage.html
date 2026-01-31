@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pomodoropal</title>
+    <style>
+        /* CSS Variables */
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --accent-color: #3b82f6;
+            --accent-secondary: #8b5cf6;
+            --text-color: #f8fafc;
+            --card-bg: rgba(30, 41, 59, 0.9);
+            --border-color: rgba(59, 130, 246, 0.3);
+            --success-color: #10b981;
+            --danger-color: #ef4444;
+            --warning-color: #f59e0b;
+        }
+
+        .light-mode {
+            --bg-primary: #f1f5f9;
+            --bg-secondary: #ffffff;
+            --accent-color: #2563eb;
+            --accent-secondary: #7c3aed;
+            --text-color: #1e293b;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --border-color: rgba(37, 99, 235, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary));
+            color: var(--text-color);
+            min-height: 100vh;
+            transition: all 0.3s ease;
+            line-height: 1.6;
+        }
+
+        /* Auth Modal */
+        .auth-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            backdrop-filter: blur(10px);
+        }
+
+        .auth-modal.active {
+            display: flex;
+        }
+
+        .auth-box {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 400px;
+            border: 2px solid var(--border-color);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .auth-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 0.8rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: var(--text-color);
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .auth-tab:hover {
+            background: rgba(59, 130, 246, 0.2);
+        }
+
+        .auth-tab.active {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .auth-form {
+            display: none;
+        }
+
+        .auth-form.active {
+            display: block;
+        }
+
+        .auth-input {
+            width: 100%;
+            padding: 0.8rem;
+            margin: 0.5rem 0 1rem 0;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-color);
+            font-size: 1rem;
+        }
+
+        .auth-btn {
+            width: 100%;
+            padding: 0.8rem;
+            background: linear-gradient(45deg, var(--accent-color), var(--accent-secondary));
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .auth-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4);
+        }
+
+        /* Navigation */
+        nav {
+            background: rgba(15, 23, 42, 0.95);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 2px solid var(--border-color);
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, var(--accent-color), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            cursor: pointer;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--accent-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            padding: 0.6rem 1.2rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 8px;
+            color: var(--text-color);
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .nav-btn:hover {
+            background: rgba(59, 130, 246, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .nav-btn.active {
+            background: var(--accent-color);
+            color: white;
+            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4);
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .content-section {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 2px solid var(--border-color);
+            display: none;
+            animation: fadeIn 0.5s ease;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Home Section */
+        .hero {
+            text-align: center;
+            padding: 2rem 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, var(--accent-color), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto 2rem auto;
+        }
+
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 3rem 0;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
+            padding: 1.5rem;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid var(--border-color);
+            text-align: center;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent-color);
+            box-shadow: 0 15px 30px rgba(59, 130, 246, 0.3);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Check-in Calendar */
+        .calendar-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1.5rem;
+            border-radius: 15px;
+            border: 2px solid var(--border-color);
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .streak-counter {
+            background: linear-gradient(45deg, #f59e0b, #f97316);
+            padding: 0.5rem 1.5rem;
+            border-radius: 20px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: white;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid transparent;
+            font-size: 0.9rem;
+        }
+
+        .calendar-day.checked {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .calendar-day.today {
+            border-color: var(--warning-color);
+        }
+
+        .check-in-btn {
+            background: linear-gradient(45deg, var(--accent-color), var(--accent-secondary));
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 1.5rem auto;
+            display: block;
+            transition: all 0.3s ease;
+        }
+
+        .check-in-btn:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.4);
+        }
+
+        .check-in-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Games Section */
+        /* Game Screens */
+        /* Timer Section */
+        /* Leaderboard */
+        
+        /* Settings */
+        .settings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .setting-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1.5rem;
+            border-radius: 15px;
+            border: 2px solid var(--border-color);
+        }
+
+        .setting-option {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 1rem 0;
+            padding: 0.8rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+        }
+
+        .toggle {
+            position: relative;
+            width: 50px;
+            height: 26px;
+            background: #666;
+            border-radius: 13px;
+            cursor: pointer;
+        }
+
+        .toggle::after {
+            content: '';
+            position: absolute;
+            width: 22px;
+            height: 22px;
+            background: white;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: 0.3s;
+        }
+
+        .toggle.active {
+            background: var(--accent-color);
+        }
+
+        .toggle.active::after {
+            left: 26px;
+        }
+
+        /* Login Prompt */
+        .login-prompt {
+            background: linear-gradient(45deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
+            padding: 1rem;
+            border-radius: 10px;
+            border: 2px solid var(--border-color);
+            margin: 1rem 0;
+            text-align: center;
+        }
+
+        .login-prompt-btn {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 1rem;
+            font-weight: bold;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
+            }
+            
+            .nav-links {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .game-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .calendar-grid {
+                grid-template-columns: repeat(7, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .calendar-grid {
+                gap: 4px;
+            }
+            
+            .calendar-day {
+                font-size: 0.8rem;
+            }
+            
+            .game-card {
+                min-height: 150px;
+            }
+            
+            .feature-card {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Auth Modal -->
+    <div class="auth-modal" id="auth-modal">
+        <div class="auth-box">
+            <div class="auth-tabs">
+                <button class="auth-tab active" onclick="showAuthForm('login')">Login</button>
+                <button class="auth-tab" onclick="showAuthForm('register')">Register</button>
+            </div>
+            
+            <form class="auth-form active" id="login-form" onsubmit="login(event)">
+                <input type="text" class="auth-input" id="login-username" placeholder="Username" required>
+                <input type="password" class="auth-input" id="login-password" placeholder="Password" required>
+                <button type="submit" class="auth-btn">Login</button>
+                <button type="button" class="auth-btn" onclick="closeAuthModal()" style="margin-top: 0.5rem; background: #666;">Cancel</button>
+            </form>
+            
+            <form class="auth-form" id="register-form" onsubmit="register(event)">
+                <input type="text" class="auth-input" id="register-username" placeholder="Username (min 3 chars)" required minlength="3">
+                <input type="password" class="auth-input" id="register-password" placeholder="Password (min 6 chars)" required minlength="6">
+                <button type="submit" class="auth-btn">Register</button>
+                <button type="button" class="auth-btn" onclick="closeAuthModal()" style="margin-top: 0.5rem; background: #666;">Cancel</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="logo" onclick="showSection('home')">Pomodoro Pal</div>
+        <div class="user-info" id="user-info" style="display: none;">
+            <div class="avatar" id="user-avatar">U</div>
+            <div>
+                <div id="user-name">User</div>
+                <div style="font-size: 0.8rem; opacity: 0.8;" id="user-level">Guest</div>
+            </div>
+            <button class="nav-btn" onclick="logout()" style="margin-left: 1rem;">Logout</button>
+        </div>
+        <div class="nav-links">
+            <button class="nav-btn active" onclick="showSection('home')">🏠 Home</button>
+            <button class="nav-btn" onclick="showSection('games')">🎮 Games</button>
+            <button class="nav-btn" onclick="showSection('timer')">⏱️ Timer</button>
+            <button class="nav-btn" onclick="showSection('leaderboard')">🏆 Leaderboard</button>
+            <button class="nav-btn" onclick="showSection('settings')">⚙️ Settings</button>
+            <button class="nav-btn" onclick="openAuthModal()" id="login-btn">🔑 Login</button>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Home Section -->
+        <div id="home" class="content-section active">
+            <div class="hero">
+                <h1>Welcome to Pomodoropal</h1>
+                <p>Combine productivity with fun! Track your study sessions, play educational games, and compete with friends.</p>
+            </div>
+
+            <!-- Check-in Calendar -->
+            <div class="calendar-container">
+                <div class="calendar-header">
+                    <h2>📅 Study Check-in Calendar</h2>
+                    <div class="streak-counter">
+                        🔥 <span id="streak-count">0</span> Day Streak
+                    </div>
+                </div>
+                <div id="calendar-status" style="text-align: center; margin-bottom: 1rem; color: var(--accent-color);">
+                    <!-- Status message will appear here -->
+                </div>
+                <div class="calendar-grid" id="calendar-grid">
+                    <!-- Calendar will be generated here -->
+                </div>
+                <button class="check-in-btn" id="check-in-btn" onclick="markCheckin()">
+                    ✅ Check-in Today
+                </button>
+                <div style="text-align: center; margin-top: 1rem; color: var(--accent-color);">
+                    <div>Monthly Goal: <span id="month-goal">0</span>/30 days</div>
+                    <progress id="month-progress" value="0" max="30" style="width: 100%; margin-top: 0.5rem;"></progress>
+                </div>
+            </div>
+
+            <!-- Features Grid with Clickable Cards -->
+            <div class="features-grid">
+                <div class="feature-card" onclick="showSection('timer')">
+                    <div class="feature-icon">⏱️</div>
+                    <h3>Study Timer</h3>
+                    <p>Pomodoro timer with focus sessions and breaks</p>
+                </div>
+                <div class="feature-card" onclick="showSection('games')">
+                    <div class="feature-icon">🎮</div>
+                    <h3>Educational Games</h3>
+                    <p>Fun games that improve memory and skills</p>
+                </div>
+                <div class="feature-card" onclick="showSection('leaderboard')">
+                    <div class="feature-icon">🏆</div>
+                    <h3>Leaderboards</h3>
+                    <p>Compete on study checkpoints and scores</p>
+                </div>
+                <div class="feature-card" onclick="showSection('settings')">
+                    <div class="feature-icon">⚙️</div>
+                    <h3>Custom Settings</h3>
+                    <p>Personalize your experience</p>
+                </div>
+            </div>
+
+            <!-- Guest vs Logged In Info -->
+            
+
+        <!-- Settings Section -->
+        <div id="settings" class="content-section">
+            <h1 style="text-align: center; margin-bottom: 1rem;">⚙️ Settings</h1>
+            <p style="text-align: center; margin-bottom: 2rem; opacity: 0.8;">Customize your Pomodoropal experience</p>
+            
+            <div id="settings-guest-info" class="login-prompt" style="display: none;">
+                <p>🔒 <strong>Login to save your settings!</strong> Customizations will be saved to your account.</p>
+                <button class="login-prompt-btn" onclick="openAuthModal()">Login Now</button>
+            </div>
+            
+            <div class="settings-grid">
+                <div class="setting-card">
+                    <h3 style="color: var(--accent-color); margin-bottom: 1rem;">🎨 Appearance</h3>
+                    <div class="setting-option">
+                        <span>Dark/Light Mode</span>
+                        <div class="toggle" id="theme-toggle" onclick="toggleTheme()"></div>
+                    </div>
+                    <div class="setting-option">
+                        <span>Font Size</span>
+                        <select id="font-size" onchange="changeFontSize(this.value)">
+                            <option value="small">Small</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="large">Large</option>
+                        </select>
+                    </div>
+                    <div class="setting-option">
+                        <span>Accent Color</span>
+                        <input type="color" id="accent-color" value="#3b82f6" onchange="changeAccentColor(this.value)">
+                    </div>
+                </div>
+
+                <div class="setting-card">
+                    <h3 style="color: var(--accent-color); margin-bottom: 1rem;">🔔 Notifications</h3>
+                    <div class="setting-option">
+                        <span>Check-in Reminders</span>
+                        <div class="toggle active" id="checkin-reminder" onclick="toggleSetting('checkinReminder')"></div>
+                    </div>
+                    <div class="setting-option">
+                        <span>Break Reminders</span>
+                        <div class="toggle active" id="break-reminder" onclick="toggleSetting('breakReminder')"></div>
+                    </div>
+                </div>
+
+                <div class="setting-card">
+                    <h3 style="color: var(--accent-color); margin-bottom: 1rem;">📊 Study Goals</h3>
+                    <div class="setting-option">
+                        <span>Daily Goal (hours)</span>
+                        <input type="number" id="daily-goal" value="2" min="0.5" max="12" step="0.5" onchange="updateGoal('daily', this.value)">
+                    </div>
+                    <div class="setting-option">
+                        <span>Weekly Goal (days)</span>
+                        <input type="number" id="weekly-goal" value="5" min="1" max="7" step="1" onchange="updateGoal('weekly', this.value)">
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============ AUTHENTICATION SYSTEM ============
+        let currentUser = null;
+        let users = JSON.parse(localStorage.getItem('studyUsers')) || [];
+        let isLoggedIn = false;
+
+        // Initialize on page load
+        window.onload = function() {
+            const savedUser = localStorage.getItem('currentUser');
+            if (savedUser) {
+                try {
+                    currentUser = JSON.parse(savedUser);
+                    isLoggedIn = true;
+                    updateUIForUser();
+                } catch (e) {
+                    console.error('Error loading user data:', e);
+                    logout();
+                }
+            } else {
+                updateUIForGuest();
+            }
+            
+            loadAllData(); // Load all data
+            generateCalendar(); // Generate calendar
+            updateLeaderboard(); // Update leaderboard
+        };
+
+        // Opens the authentication modal
+        function openAuthModal() {
+            document.getElementById('auth-modal').classList.add('active');
+        }
+
+        // Closes the authentication modal
+        function closeAuthModal() {
+            document.getElementById('auth-modal').classList.remove('active');
+        }
+
+        // Switches between login and register forms
+        function showAuthForm(form) {
+            document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active')); 
+            document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+            
+            document.getElementById(form + '-form').classList.add('active');
+            document.querySelector(`.auth-tab[onclick="showAuthForm('${form}')"]`).classList.add('active');
+        }
+
+        //Logs in a user with the given username and password.
+        function login(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('login-username').value.trim();
+            const password = document.getElementById('login-password').value.trim();
+            
+            if (!username || !password) {
+                alert('Please fill in all fields');
+                return;
+            }
+            
+            // Find the user with the given username and password
+            const user = users.find(u => u.username === username && u.password === password);
+            if (user) {
+                currentUser = user;
+                isLoggedIn = true;
+                localStorage.setItem('currentUser', JSON.stringify(user));
+                
+                updateUIForUser();
+                closeAuthModal();
+                loadUserData();
+                generateCalendar();
+                updateLeaderboard();
+                
+                alert('Login successful! Welcome back ' + username + '!');
+            } else {
+                alert('Invalid username or password');
+            }
+        }
+
+        //Registers a new user with the given username and password.
+        function register(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('register-username').value.trim();
+            const password = document.getElementById('register-password').value.trim();
+            
+            // Checks if username and password are valid
+            if (!username || username.length < 3) {
+                alert('Username must be at least 3 characters');
+                return;
+            }
+            
+            // Checks if password is valid
+            if (!password || password.length < 6) {
+                alert('Password must be at least 6 characters');
+                return;
+            }
+            // Checks if username already exists
+            if (users.some(u => u.username === username)) {
+                alert('Username already exists');
+                return;
+            }
+            
+            //  Creates a new user
+            const newUser = {
+                id: Date.now().toString(),
+                username: username,
+                password: password,
+                createdAt: new Date().toISOString(),
+                checkins: {},
+                stats: {
+                    checkpoints: 0,
+                    streak: 0,
+                    totalHours: 0,
+                    level: 1,
+                    xp: 0
+                },
+                // Initialize game stats
+                games: {
+                    // Add game stats here
+                },
+                settings: {
+                    theme: 'dark',
+                    fontSize: 'medium',
+                    accentColor: '#3b82f6'
+                }
+            };
+            
+            // Adds the new user to the users array
+            users.push(newUser);
+            localStorage.setItem('studyUsers', JSON.stringify(users));
+            
+            // Sets the current user to the new user
+            currentUser = newUser;
+            isLoggedIn = true; 
+            localStorage.setItem('currentUser', JSON.stringify(newUser)); // Update local storage
+            
+            updateUIForUser(); // Update UI
+            closeAuthModal(); // Close auth modal
+            generateCalendar(); // Generate calendar
+            updateLeaderboard(); // Update leaderboard
+            
+            alert('Registration successful! Welcome to Pomodoropal!');
+        }
+
+        // Logs out the current user
+        function logout() {
+            currentUser = null;
+            isLoggedIn = false;
+            localStorage.removeItem('currentUser');
+            
+            updateUIForGuest(); // Update UI
+            generateCalendar(); // Generate calendar
+            updateLeaderboard(); // Update leaderboard
+            
+            alert('Logged out successfully');
+        }
+
+        // Updates the UI for a logged-in user
+        function updateUIForUser() {
+            // Update nav
+            document.getElementById('user-info').style.display = 'flex'; // Show user info
+            document.getElementById('login-btn').style.display = 'none'; // Hide login button
+            document.getElementById('user-avatar').textContent = currentUser.username.charAt(0).toUpperCase(); // Set user avatar
+            document.getElementById('user-name').textContent = currentUser.username; // Set user name
+            document.getElementById('user-level').textContent = `Level ${currentUser.stats.level || 1}`; // Set user level
+            
+            // Update home page
+            document.getElementById('guest-info').style.display = 'none'; // Hide guest info
+            document.getElementById('user-info-card').style.display = 'block'; // Show user info card
+            document.getElementById('welcome-name').textContent = currentUser.username; // Set welcome name
+            // Set user stats
+            document.getElementById('user-stats').textContent = 
+                `Level ${currentUser.stats.level || 1} | ${currentUser.stats.checkpoints || 0} checkpoints | ${currentUser.stats.streak || 0}-day streak`;
+            
+            // Update timer settings visibility
+            document.getElementById('timer-user-settings').style.display = 'block';
+            document.getElementById('timer-guest-warning').style.display = 'none';
+            
+            // Update leaderboard
+            document.getElementById('leaderboard-guest-info').style.display = 'none';
+            
+            // Update settings
+            document.getElementById('settings-guest-info').style.display = 'none';
+            
+            // Enable check-in button
+            document.getElementById('check-in-btn').disabled = false;
+            updateCheckinButton();
+        }
+
+        // Updates the UI for a guest
+        function updateUIForGuest() {
+            // Update nav
+            document.getElementById('user-info').style.display = 'none';
+            document.getElementById('login-btn').style.display = 'block';
+            
+            // Update home page
+            document.getElementById('guest-info').style.display = 'block';
+            document.getElementById('user-info-card').style.display = 'none';
+            
+            // Update timer settings visibility
+            document.getElementById('timer-user-settings').style.display = 'none';
+            document.getElementById('timer-guest-warning').style.display = 'block';
+            
+            // Update leaderboard
+            document.getElementById('leaderboard-guest-info').style.display = 'block';
+            
+            // Update settings
+            document.getElementById('settings-guest-info').style.display = 'block';
+            
+            // Disable check-in button for guests
+            document.getElementById('check-in-btn').disabled = true;
+            document.getElementById('calendar-status').innerHTML = '<p>🔒 Login to use the check-in calendar!</p>';
+        }
+
+        //Shows a section and updates the active nav button
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Update active nav button
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Find and activate the corresponding button
+            const buttons = document.querySelectorAll('.nav-btn');
+            for (let btn of buttons) {
+                if (btn.textContent.includes(sectionId.charAt(0).toUpperCase() + sectionId.slice(1).toLowerCase())) {
+                    btn.classList.add('active');
+                    break;
+                }
+            }
+            
+            // Special case for login button
+            if (sectionId === 'home') {
+                document.querySelector('.nav-btn[onclick="showSection(\'home\')"]').classList.add('active');
+            }
+        }
+
+        // Generates the calendar for the current month.
+        function generateCalendar() {
+            const grid = document.getElementById('calendar-grid');
+            if (!grid) return;
+            
+            grid.innerHTML = '';
+            
+            const today = new Date();
+            const currentMonth = today.getMonth();
+            const currentYear = today.getFullYear();
+            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+            
+            // Get first day of month (0 = Sunday, 1 = Monday, etc.)
+            const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+            
+            // Add empty cells for days before the first day of month
+            for (let i = 0; i < firstDay; i++) {
+                const emptyDay = document.createElement('div');
+                emptyDay.className = 'calendar-day';
+                emptyDay.style.opacity = '0.3';
+                emptyDay.innerHTML = '<div></div>';
+                grid.appendChild(emptyDay);
+            }
+            
+            // Get user's check-in data
+            const checkins = currentUser?.checkins || {};
+            
+            // Generate days
+            for (let i = 1; i <= daysInMonth; i++) {
+                const dayDate = new Date(currentYear, currentMonth, i);
+                const dateStr = dayDate.toISOString().split('T')[0];
+                const isToday = i === today.getDate() && currentMonth === today.getMonth() && currentYear === today.getFullYear();
+                const isChecked = checkins[dateStr];
+                
+                const dayEl = document.createElement('div');
+                dayEl.className = `calendar-day ${isChecked ? 'checked' : ''} ${isToday ? 'today' : ''}`; 
+                dayEl.innerHTML = `
+                    <div style="font-weight: ${isToday ? 'bold' : 'normal'}">${i}</div>
+                `; 
+                // Add border if today
+                if (isToday) {
+                    dayEl.style.border = `2px solid ${isChecked ? '#10b981' : '#f59e0b'}`;
+                }
+                
+                grid.appendChild(dayEl); // Append day to grid
+            }
+            
+            // Update stats
+            if (currentUser) {
+                document.getElementById('streak-count').textContent = currentUser.stats.streak || 0;
+                const monthCheckins = Object.keys(checkins).filter(d => {
+                    const date = new Date(d);
+                    return date.getMonth() === currentMonth && date.getFullYear() === currentYear;
+                }).length;
+                
+                document.getElementById('month-goal').textContent = monthCheckins;
+                document.getElementById('month-progress').value = monthCheckins;
+                
+                document.getElementById('calendar-status').innerHTML = 
+                    `<p>📅 ${currentUser.username}, you have ${monthCheckins} check-ins this month. Keep it up!</p>`;
+            } else {
+                document.getElementById('streak-count').textContent = '0';
+                document.getElementById('month-goal').textContent = '0';
+                document.getElementById('month-progress').value = 0;
+            }
+            
+            updateCheckinButton();
+        }
+        // Updates the check-in button based on the user's login status and check-in history.
+        function updateCheckinButton() {
+            const btn = document.getElementById('check-in-btn');
+            if (!isLoggedIn) {
+                btn.disabled = true;
+                btn.textContent = '🔒 Login to Check-in';
+                return;
+            }
+            
+            const today = new Date().toISOString().split('T')[0];
+            const alreadyChecked = currentUser.checkins && currentUser.checkins[today];
+            
+            if (alreadyChecked) {
+                btn.disabled = true;
+                btn.textContent = '✅ Already Checked-in Today';
+            } else {
+                btn.disabled = false;
+                btn.textContent = '✅ Check-in Today';
+            }
+        }
+
+        // Checks in the user for the current day
+        // ============ GAMES ============
+        // Game state variables
+        // Load game data
+        // Save game data
+        // Load user data
+        // Game Navigation
+        // Back to Games
+        // ============ TIMER ============
+        // Timer page navigation
+        // ============ LEADERBOARD ============
+        // Show leaderboard
+        // ============ SETTINGS ============
+
+        // customize theme
+        function toggleTheme() {
+            const toggle = document.getElementById('theme-toggle');
+            toggle.classList.toggle('active');
+            
+            if (toggle.classList.contains('active')) {
+                document.body.classList.add('light-mode');
+                if (isLoggedIn && currentUser) {
+                    currentUser.settings.theme = 'light';
+                    saveUserSettings();
+                }
+            } else {
+                document.body.classList.remove('light-mode');
+                if (isLoggedIn && currentUser) {
+                    currentUser.settings.theme = 'dark';
+                    saveUserSettings();
+                }
+            }
+        }
+
+        // change font size
+        function changeFontSize(size) {
+            document.body.style.fontSize = size === 'small' ? '14px' : size === 'medium' ? '16px' : '18px';
+            
+            if (isLoggedIn && currentUser) {
+                currentUser.settings.fontSize = size;
+                saveUserSettings();
+            }
+        }
+
+        // change accent color
+        function changeAccentColor(color) {
+            document.documentElement.style.setProperty('--accent-color', color);
+            
+            if (isLoggedIn && currentUser) {
+                currentUser.settings.accentColor = color;
+                saveUserSettings();
+            }
+        }
+
+        // toggle setting
+        function toggleSetting(setting) {
+            const toggle = event.target;
+            toggle.classList.toggle('active');
+            
+            if (isLoggedIn && currentUser) {
+                currentUser.settings[setting] = toggle.classList.contains('active');
+                saveUserSettings();
+            }
+        }
+
+        // update goal
+        function updateGoal(type, value) {
+            if (isLoggedIn && currentUser) {
+                if (!currentUser.goals) currentUser.goals = {};
+                currentUser.goals[type] = parseFloat(value);
+                saveUserSettings();
+            }
+        }
+
+        // save user settings
+        function saveUserSettings() {
+            if (!isLoggedIn || !currentUser) return;
+            
+            const userIndex = users.findIndex(u => u.id === currentUser.id); // Find user
+            
+            // Update user settings
+            if (userIndex > -1) {
+                users[userIndex] = currentUser;
+                localStorage.setItem('studyUsers', JSON.stringify(users)); // Update studyUsers
+                localStorage.setItem('currentUser', JSON.stringify(currentUser)); // Update currentUser
+            }
+        }
+    </script>
+</body>
+</html>
