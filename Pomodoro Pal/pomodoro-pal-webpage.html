@@ -999,7 +999,46 @@
         // Timer page navigation
         // ============ LEADERBOARD ============
         // Show leaderboard
-        // ============ SETTINGS ============
+
+        // ============ SETTINGS FUNCTIONS ============
+        function loadUserSettings() {
+            if (!currentUser || !currentUser.settings) return;
+            
+            const settings = currentUser.settings;
+            
+            if (settings.theme === 'light') {
+                document.getElementById('theme-toggle').classList.add('active');
+                document.body.classList.add('light-mode');
+            }
+            
+            if (settings.fontSize) {
+                document.getElementById('font-size').value = settings.fontSize;
+                changeFontSize(settings.fontSize);
+            }
+            
+            if (settings.accentColor) {
+                document.getElementById('accent-color').value = settings.accentColor;
+                changeAccentColor(settings.accentColor);
+            }
+            
+            if (settings.checkinReminder) {
+                document.getElementById('checkin-reminder').classList.add('active');
+            }
+            
+            if (settings.breakReminder) {
+                document.getElementById('break-reminder').classList.add('active');
+            }
+            
+            if (settings.soundEffects) {
+                document.getElementById('sound-effects').classList.add('active');
+            }
+            
+            if (currentUser.goals) {
+                document.getElementById('daily-goal').value = currentUser.goals.daily || 2;
+                document.getElementById('weekly-goal').value = currentUser.goals.weekly || 5;
+                document.getElementById('monthly-goal').value = currentUser.goals.monthly || 20;
+            }
+        }
 
         // customize theme
         function toggleTheme() {
