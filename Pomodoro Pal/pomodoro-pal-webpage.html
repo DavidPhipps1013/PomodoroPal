@@ -365,11 +365,17 @@
             cursor: not-allowed;
         }
 
-        /* Games Section */
-        /* Game Screens */
-        /* Timer Section */
-        /* Leaderboard */
-        
+        /* Guest vs Logged In Info */
+        .guest-info, .user-info-card {
+            margin: 2rem auto;
+            max-width: 600px;
+            padding: 1.5rem;
+            background: linear-gradient(45deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
+            border-radius: 15px;
+            border: 2px solid var(--border-color);
+            text-align: center;
+        }
+
         /* Settings */
         .settings-grid {
             display: grid;
@@ -462,7 +468,7 @@
                 font-size: 2rem;
             }
             
-            .game-header {
+            .calendar-header {
                 flex-direction: column;
                 text-align: center;
             }
@@ -479,10 +485,6 @@
             
             .calendar-day {
                 font-size: 0.8rem;
-            }
-            
-            .game-card {
-                min-height: 150px;
             }
             
             .feature-card {
@@ -529,6 +531,7 @@
         </div>
         <div class="nav-links">
             <button class="nav-btn active" onclick="showSection('home')">🏠 Home</button>
+            <button class="nav-btn" onclick="showSection('todo')">📝 To-Do List</button>
             <button class="nav-btn" onclick="showSection('games')">🎮 Games</button>
             <button class="nav-btn" onclick="showSection('timer')">⏱️ Timer</button>
             <button class="nav-btn" onclick="showSection('leaderboard')">🏆 Leaderboard</button>
@@ -543,7 +546,7 @@
         <div id="home" class="content-section active">
             <div class="hero">
                 <h1>Welcome to Pomodoropal</h1>
-                <p>Combine productivity with fun! Track your study sessions, play educational games, and compete with friends.</p>
+                <p>We blend the Pomodoro Technique with gamification, community challenges, and smart tracking to make every study session engaging and rewarding.</p>
             </div>
 
             <!-- Check-in Calendar -->
@@ -576,6 +579,11 @@
                     <h3>Study Timer</h3>
                     <p>Pomodoro timer with focus sessions and breaks</p>
                 </div>
+                <div class="feature-card" onclick="showSection('todo')">
+                    <div class="feature-icon">📝</div>
+                    <h3>To-Do List</h3>
+                    <p>Helps you track and prioritize tasks</p>
+                </div>
                 <div class="feature-card" onclick="showSection('games')">
                     <div class="feature-icon">🎮</div>
                     <h3>Educational Games</h3>
@@ -586,15 +594,20 @@
                     <h3>Leaderboards</h3>
                     <p>Compete on study checkpoints and scores</p>
                 </div>
-                <div class="feature-card" onclick="showSection('settings')">
-                    <div class="feature-icon">⚙️</div>
-                    <h3>Custom Settings</h3>
-                    <p>Personalize your experience</p>
-                </div>
             </div>
 
             <!-- Guest vs Logged In Info -->
+            <div id="guest-info" class="login-prompt" style="display: none; margin-top: 2rem;">
+                <p>🔓 <strong>You're browsing as a guest!</strong> Login to save your progress, track stats, and compete on leaderboards.</p>
+                <button class="login-prompt-btn" onclick="openAuthModal()">Login / Register Now</button>
+            </div>
             
+            <div id="user-info-card" style="display: none; background: linear-gradient(45deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1)); padding: 1.5rem; border-radius: 15px; margin-top: 2rem; border: 2px solid var(--border-color);">
+                <h3 style="color: var(--accent-color); margin-bottom: 0.5rem;">Welcome back, <span id="welcome-name">User</span>! 👋</h3>
+                <p style="margin-bottom: 1rem;">You're on a <strong><span id="streak-count-2">0</span>-day streak</strong>! Keep up the great work!</p>
+                <div id="user-stats" style="font-size: 0.9rem; opacity: 0.8;"></div>
+            </div>
+        </div> <!-- THIS IS THE MISSING CLOSING DIV FOR HOME SECTION -->
 
         <!-- Settings Section -->
         <div id="settings" class="content-section">
@@ -637,6 +650,10 @@
                         <span>Break Reminders</span>
                         <div class="toggle active" id="break-reminder" onclick="toggleSetting('breakReminder')"></div>
                     </div>
+                    <div class="setting-option">
+                        <span>Sound Effects</span>
+                        <div class="toggle active" id="sound-effects" onclick="toggleSetting('soundEffects')"></div>
+                    </div>
                 </div>
 
                 <div class="setting-card">
@@ -649,10 +666,17 @@
                         <span>Weekly Goal (days)</span>
                         <input type="number" id="weekly-goal" value="5" min="1" max="7" step="1" onchange="updateGoal('weekly', this.value)">
                     </div>
+                    <div class="setting-option">
+                        <span>Monthly Goal (days)</span>
+                        <input type="number" id="monthly-goal" value="20" min="1" max="31" step="1" onchange="updateGoal('monthly', this.value)">
+                    </div>
                 </div>
-                
             </div>
         </div>
+        <!-- END Settings Section -->
+
+        <!-- TODO: Add other sections (todo, games, timer, leaderboard) here -->
+        
     </div>
 
     <script>
@@ -701,7 +725,7 @@
             document.querySelector(`.auth-tab[onclick="showAuthForm('${form}')"]`).classList.add('active');
         }
 
-        //Logs in a user with the given username and password.
+        // Logs in a user with the given username and password.
         function login(event) {
             event.preventDefault();
             
@@ -732,7 +756,7 @@
             }
         }
 
-        //Registers a new user with the given username and password.
+        // Registers a new user with the given username and password.
         function register(event) {
             event.preventDefault();
             
@@ -756,7 +780,7 @@
                 return;
             }
             
-            //  Creates a new user
+            // Creates a new user
             const newUser = {
                 id: Date.now().toString(),
                 username: username,
@@ -828,13 +852,6 @@
             document.getElementById('user-stats').textContent = 
                 `Level ${currentUser.stats.level || 1} | ${currentUser.stats.checkpoints || 0} checkpoints | ${currentUser.stats.streak || 0}-day streak`;
             
-            // Update timer settings visibility
-            document.getElementById('timer-user-settings').style.display = 'block';
-            document.getElementById('timer-guest-warning').style.display = 'none';
-            
-            // Update leaderboard
-            document.getElementById('leaderboard-guest-info').style.display = 'none';
-            
             // Update settings
             document.getElementById('settings-guest-info').style.display = 'none';
             
@@ -853,13 +870,6 @@
             document.getElementById('guest-info').style.display = 'block';
             document.getElementById('user-info-card').style.display = 'none';
             
-            // Update timer settings visibility
-            document.getElementById('timer-user-settings').style.display = 'none';
-            document.getElementById('timer-guest-warning').style.display = 'block';
-            
-            // Update leaderboard
-            document.getElementById('leaderboard-guest-info').style.display = 'block';
-            
             // Update settings
             document.getElementById('settings-guest-info').style.display = 'block';
             
@@ -868,7 +878,7 @@
             document.getElementById('calendar-status').innerHTML = '<p>🔒 Login to use the check-in calendar!</p>';
         }
 
-        //Shows a section and updates the active nav button
+        // Shows a section and updates the active nav button
         function showSection(sectionId) {
             // Hide all sections
             document.querySelectorAll('.content-section').forEach(section => {
@@ -966,6 +976,7 @@
             
             updateCheckinButton();
         }
+        
         // Updates the check-in button based on the user's login status and check-in history.
         function updateCheckinButton() {
             const btn = document.getElementById('check-in-btn');
@@ -987,7 +998,63 @@
             }
         }
 
-        // Checks in the user for the current day
+        function markCheckin() {
+            if (!isLoggedIn || !currentUser) {
+                alert('Please login to check in');
+                openAuthModal();
+                return;
+            }
+            
+            const today = new Date().toISOString().split('T')[0];
+            
+            // Initialize checkins object if it doesn't exist
+            if (!currentUser.checkins) {
+                currentUser.checkins = {};
+            }
+            
+            // Check if already checked in today
+            if (currentUser.checkins[today]) {
+                alert('You have already checked in today!');
+                return;
+            }
+            
+            // Mark check-in for today
+            currentUser.checkins[today] = true;
+            
+            // Update streak
+            if (!currentUser.stats) currentUser.stats = {};
+            
+            // Calculate streak
+            const dates = Object.keys(currentUser.checkins).sort();
+            let streak = 0;
+            let currentDate = new Date();
+            
+            for (let i = 0; i < dates.length; i++) {
+                const checkinDate = new Date(dates[dates.length - 1 - i]);
+                const diffTime = Math.abs(currentDate - checkinDate);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                
+                if (diffDays === i) {
+                    streak++;
+                } else {
+                    break;
+                }
+            }
+            
+            currentUser.stats.streak = streak;
+            currentUser.stats.checkpoints = (currentUser.stats.checkpoints || 0) + 1;
+            
+            // Save user data
+            saveUserData();
+            
+            // Update UI
+            generateCalendar();
+            updateUIForUser();
+            
+            alert('✅ Check-in successful! Keep up the good work!');
+        }
+
+        // ============ Todo list functions ============
         // ============ GAMES ============
         // Game state variables
         // Load game data
@@ -1040,7 +1107,6 @@
             }
         }
 
-        // customize theme
         function toggleTheme() {
             const toggle = document.getElementById('theme-toggle');
             toggle.classList.toggle('active');
@@ -1049,68 +1115,52 @@
                 document.body.classList.add('light-mode');
                 if (isLoggedIn && currentUser) {
                     currentUser.settings.theme = 'light';
-                    saveUserSettings();
+                    saveUserData();
                 }
             } else {
                 document.body.classList.remove('light-mode');
                 if (isLoggedIn && currentUser) {
                     currentUser.settings.theme = 'dark';
-                    saveUserSettings();
+                    saveUserData();
                 }
             }
         }
 
-        // change font size
         function changeFontSize(size) {
             document.body.style.fontSize = size === 'small' ? '14px' : size === 'medium' ? '16px' : '18px';
             
             if (isLoggedIn && currentUser) {
                 currentUser.settings.fontSize = size;
-                saveUserSettings();
+                saveUserData();
             }
         }
 
-        // change accent color
         function changeAccentColor(color) {
             document.documentElement.style.setProperty('--accent-color', color);
             
             if (isLoggedIn && currentUser) {
                 currentUser.settings.accentColor = color;
-                saveUserSettings();
+                saveUserData();
             }
         }
 
-        // toggle setting
         function toggleSetting(setting) {
-            const toggle = event.target;
+            const toggle = event.target.closest('.toggle');
+            if (!toggle) return;
+            
             toggle.classList.toggle('active');
             
             if (isLoggedIn && currentUser) {
                 currentUser.settings[setting] = toggle.classList.contains('active');
-                saveUserSettings();
+                saveUserData();
             }
         }
 
-        // update goal
         function updateGoal(type, value) {
             if (isLoggedIn && currentUser) {
                 if (!currentUser.goals) currentUser.goals = {};
                 currentUser.goals[type] = parseFloat(value);
-                saveUserSettings();
-            }
-        }
-
-        // save user settings
-        function saveUserSettings() {
-            if (!isLoggedIn || !currentUser) return;
-            
-            const userIndex = users.findIndex(u => u.id === currentUser.id); // Find user
-            
-            // Update user settings
-            if (userIndex > -1) {
-                users[userIndex] = currentUser;
-                localStorage.setItem('studyUsers', JSON.stringify(users)); // Update studyUsers
-                localStorage.setItem('currentUser', JSON.stringify(currentUser)); // Update currentUser
+                saveUserData();
             }
         }
     </script>
