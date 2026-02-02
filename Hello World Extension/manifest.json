@@ -3,10 +3,11 @@
   "description": "Your favorite studying companion!",
   "version": "0.0",
   "manifest_version": 3,
-  "permissions": ["activeTab", "scripting"],
   "action": {
     "default_popup": "hello.html",
-    "default_icon": "images/hello_extensions.png",
+    "default_icon": "images/hello_extensions.png"
+  },
+  "permissions": ["activeTab", "scripting"],
     "content_scripts": [
       {
         "matches": [
@@ -15,11 +16,18 @@
         "js": [
           "scripts/content.js"
         ]
+      },
+      {
+        "matches": [
+          "<all_urls>"
+        ],
+        "js": [
+          "scripts/timer.js"
+        ]
       }
     ],
     "web_accessible_resources": [{
-      "resources": ["images/overlay.png"],
+      "resources": ["timer.html", "images/*"],
       "matches": ["<all_urls>"]
     }]
   }
-}
