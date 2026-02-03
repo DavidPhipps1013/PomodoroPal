@@ -1,16 +1,28 @@
 <html>
   <style>
-    .onOffButton {
+    .startButton {
       background-color: green;
       text-align: center;
       cursor: pointer;
     }
   </style>
-  <body>
-    <h1>POMODORO PAL V0.0</h1>
-    <button class="onOffButton">START POMODORO!!!!</button>
+  <style>
+    .endButton {
+      background-color: red;
+      text-align: center;
+      cursor: pointer;
+    }
+  </style>
+  <style>
+    .menu {
+      background-image: url("images/menuBackground.png");
+    }
+  </style>
+  <body class="menu">
+    <h1>POMODORO PAL V0.1</h1>
+    <button id = "startButton" class="startButton">START POMODORO!!!!</button>
+    <button id = "endButton" class="endButton">STOP POMODORO!!!!</button>
     <script src="scripts/popup.js"></script>
-    <script src="scripts/menu.js"></script>
     <script src="scripts/timer.js"></script>
   </body>
 </html>
