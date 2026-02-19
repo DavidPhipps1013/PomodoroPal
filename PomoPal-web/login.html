@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Log in</title>
+
+        <style>
+            :root{
+                --bg: #f3f4f6;
+                --card: #ffffff;
+                --text: #111827;
+                --border: #e5e7eb;
+                --radius: 18px;
+                --shadow: 0 18px 40px rgba(17,24,39,.10);
+            }
+
+            *{ box-sizing: border-box; }
+
+            body{
+                margin:0;
+                min-height:100vh;
+                display:grid;
+                place-items:center;
+                background: var(--bg);
+                color: var(--text);
+                font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+                padding: 24px;
+            }
+
+            .card{
+                width: 100%;
+                max-width: 420px;
+                background: var(--card);
+                border: 1px solid var(--border);
+                border-radius: var(--radius);
+                box-shadow: var(--shadow);
+                padding: 28px;
+            }
+
+            .title{
+                margin: 0 0 6px;
+                text-align: center;
+                font-size: 22px;
+                font-weight: 700;
+                letter-spacing: -0.02em;
+            }
+
+            .subtitle{
+                margin: 0 0 20px;
+                text-align: center;
+                font-size: 14px;
+                color: #6b7280;
+            }
+
+            .error{
+                display: none;
+                margin-bottom: 16px;
+                padding: 10px 12px;
+                border-radius: 12px;
+                border: 1px solid rgba(239,68,68,.35);
+                background: rgba(239,68,68,.08);
+                color: #991b1b;
+                font-size: 13px;
+            }
+
+            .field{
+                margin-bottom: 14px;
+            }
+
+            label{
+                display: block;
+                margin-bottom: 6px;
+                font-size: 13px;
+                font-weight: 600;
+            }
+
+            .input{
+                width: 100%;
+                padding: 12px;
+                border-radius: 12px;
+                border: 1px solid #e5e7eb;
+                font-size: 14px;
+                outline: none;
+            }
+
+            .input:focus{
+                border-color: #c7cad1;
+                box-shadow: 0 0 0 4px rgba(17,24,39,.06);
+            }
+
+            .password-wrap{
+                position: relative;
+            }
+
+            .toggle{
+                position: absolute;
+                top: 50%;
+                right: 10px;
+                transform: translateY(-50%);
+                padding: 6px 10px;
+                font-size: 12px;
+                font-weight: 600;
+                border-radius: 999px;
+                border: 1px solid #e5e7eb;
+                background: #ffffff;
+                cursor: pointer;
+            }
+
+            .toggle:hover{
+                box-shadow: 0 8px 16px rgba(17,24,39,.06);
+            }
+
+            .row{
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 12px;
+                margin: 10px 0 16px;
+                flex-wrap: wrap;
+            }
+
+            .remember{
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                font-size: 13px;
+                color: #6b7280;
+                user-select: none;
+            }
+
+            .link{
+                font-size: 13px;
+                font-weight: 600;
+                color: #111827;
+                text-decoration: none;
+            }
+
+            .link:hover{
+                text-decoration: underline;
+            }
+
+            .btn{
+                width: 100%;
+                padding: 12px 14px;
+                border-radius: 12px;
+                border: none;
+                background: #111827;
+                color: #ffffff;
+                font-size: 14px;
+                font-weight: 700;
+                cursor: pointer;
+            }
+
+            .btn:hover{
+            filter: brightness(1.05);
+            }
+
+            .signup-text{
+                margin-top: 16px;
+                text-align: center;
+                font-size: 13px;
+                color: #6b7280;
+            }
+
+            .signup-text a{
+                color: #111827;
+                font-weight: 700;
+                text-decoration: none;
+            }
+
+            .signup-text a:hover{
+                text-decoration: underline;
+            }
+
+        </style>
+    </head>
+
+    <body>
+        <main class="card">
+            <h1 class="title">Welcome back</h1>
+            <p class="subtitle">Log in to continue to Pomodoro Pal</p>
+
+            <div id="errorBox" class="error">
+                Incorrect email or password. Please try again.
+            </div>
+            <form id="loginForm">
+                <div class="field">
+                    <label for="email">Email</label>
+                    <input
+                        id="email"
+                        type="email"
+                        placeholder="you@example.com"
+                        class="input"
+                    />
+                </div>
+                <div class="field">
+                    <label for="password">Password</label>
+                    <div class="password-wrap">
+                        <input
+                            id="password"
+                            type="password"
+                            placeholder="••••••••"
+                            class="input"
+                        />
+                        <button type="button" class="toggle" id="togglePassword">Show</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <label class="remember">
+                    <input type="checkbox" id="rememberMe" />
+                    Remember me
+                    </label>
+
+                    <a class="link" href="forgot-password.html">Forgot password?</a>
+                </div>
+
+                <button type="submit" class="btn">Log in</button>
+                <p class="signup-text">
+                    Don’t have an account?
+                    <a href="signup.html">Sign up</a>
+                </p>
+
+            </form>
+        </main>
+
+        <script>
+            const passwordInput = document.getElementById("password");
+            const toggleBtn = document.getElementById("togglePassword");
+
+            let hideTimer = null;
+
+            toggleBtn.addEventListener("click", () => {
+                const isHidden = passwordInput.type === "password";
+
+                // Clear any existing timer
+                if (hideTimer) {
+                clearTimeout(hideTimer);
+                hideTimer = null;
+                }
+
+                if (isHidden) {
+                // Show password
+                passwordInput.type = "text";
+                toggleBtn.textContent = "Hide";
+
+                // Auto-hide after 3 seconds
+                hideTimer = setTimeout(() => {
+                    passwordInput.type = "password";
+                    toggleBtn.textContent = "Show";
+                    hideTimer = null;
+                }, 2000);
+                } else {
+                // Manually hide
+                passwordInput.type = "password";
+                toggleBtn.textContent = "Show";
+                }
+            });
+    
+            const form = document.getElementById("loginForm");
+            const errorBox = document.getElementById("errorBox");
+
+            form.addEventListener("submit", (e) => {
+                e.preventDefault();
+                errorBox.style.display = "none";
+
+                const email = document.getElementById("email").value.trim();
+                const password = document.getElementById("password").value;
+
+                // Basic empty-field check
+                if (!email || !password) {
+                errorBox.textContent = "Please enter your email and password.";
+                errorBox.style.display = "block";
+                return;
+                }
+
+                // DEMO credentials (replace later with backend)
+                const DEMO_EMAIL = "test@pomodoropal.com";
+                const DEMO_PASSWORD = "123456";
+
+                if (email !== DEMO_EMAIL || password !== DEMO_PASSWORD) {
+                errorBox.textContent = "Incorrect email or password. Please try again.";
+                errorBox.style.display = "block";
+                return;
+                }
+
+                // Success (we'll create this later)
+                window.location.href = "dashboard.html";
+            });
+        </script>
+
+
+    </body>
+</html>

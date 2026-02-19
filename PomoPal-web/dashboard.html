@@ -1,0 +1,717 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dashboard • Pomodoro Pal</title>
+
+  <style>
+    :root{
+      --bg: #f3f4f6;
+      --card: #ffffff;
+      --text: #111827;
+      --muted:#6b7280;
+      --border: #e5e7eb;
+      --radius: 18px;
+      --shadow: 0 18px 40px rgba(17,24,39,.10);
+      --max: 1100px;
+    }
+
+    [data-theme="dark"]{
+        --bg: #0b1220;
+        --card: #0f172a;
+        --text: #e5e7eb;
+        --muted: #9ca3af;
+        --border: rgba(255,255,255,.10);
+        --shadow: 0 18px 40px rgba(0,0,0,.45);
+    }
+
+    *{ box-sizing: border-box; }
+
+    body{
+      margin:0;
+      min-height:100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    }
+
+    .wrap{
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    header{
+      background: rgba(243,244,246,.75);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    [data-theme="dark"] header{
+        background: rgba(15,23,42,.75);
+    }
+
+    .topbar{
+      height: 72px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 12px;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-badge{
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background: #111827;
+      color: #fff;
+      display:grid;
+      place-items:center;
+      font-weight: 800;
+      font-size: 14px;
+    }
+
+    .nav{
+      display:flex;
+      gap: 16px;
+      align-items:center;
+      color: #374151;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .nav a{
+      text-decoration:none;
+      color: inherit;
+      opacity: .9;
+    }
+    .nav a:hover{ opacity: 1; }
+
+    .actions{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+    }
+
+    .btn{
+      border: 1px solid var(--border);
+      background: var(--card);
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-weight: 500;
+      cursor:pointer;
+      font-size: 14px;
+      color: var(--text);
+    }
+    .btn:hover{ box-shadow: 0 10px 18px rgba(17,24,39,.06); }
+
+    .btn-dark{
+      background: #111827;
+      color: #fff;
+      border-color: #111827;
+    }
+    .btn-dark:hover{ filter: brightness(1.05); }
+
+    main{
+      padding: 22px 0 70px;
+    }
+
+    .page-title{
+      margin: 0;
+      font-size: 26px;
+      letter-spacing: -0.02em;
+    }
+
+    .page-sub{
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .card{
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 18px;
+    }
+
+    .grid{
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: 1.2fr .8fr;
+      grid-template-areas:
+            "timer stats"
+            "settings stats";
+      gap: 16px;
+      align-items: start;
+    }
+
+    .timer-card{ 
+        grid-area: timer;
+        padding: 18px;
+     }
+    .stats-card{ grid-area: stats; align-self: start; }
+    .settings-card{ grid-area: settings; }
+
+
+    @media (max-width: 900px){
+      .grid{ 
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "timer"
+            "stats"
+            "settings"; 
+        }
+    }
+
+
+    .timer-top{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .card-title{
+      margin: 0;
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+    }
+
+    .card-sub{
+      margin: 6px 0 0;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .modes{
+      display:flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .mode-btn{
+      border: 1px solid var(--border);
+      background: var(--card);
+      padding: 8px 10px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      color: #374151;
+    }
+
+    .mode-btn.active{
+      background: #111827;
+      color: #fff;
+      border-color: #111827;
+    }
+
+    .timer-mid{
+      margin-top: 18px;
+      display:grid;
+      gap: 14px;
+    }
+
+    .time{
+      text-align:center;
+      font-size: 52px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .progress{
+      height: 8px;
+      background: #e5e7eb;
+      border-radius: 999px;
+      overflow:hidden;
+    }
+
+    .progress-fill{
+      height: 100%;
+      width: 0%;
+      background: #111827;
+      border-radius: 999px;
+      transition: width .2s ease;
+    }
+
+    .timer-actions{
+      display:flex;
+      justify-content:center;
+      gap: 10px;
+    }
+
+    /* ---- Stats card ---- */
+    .stats-top{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .today-box{
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 10px 12px;
+      background: var(--card);
+      min-width: 140px;
+    }
+
+    .today-label{
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .today-value{
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-top: 2px;
+    }
+
+    .today-sub{
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .chart-wrap{
+      margin-top: 14px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 10px;
+      background: var(--card);
+    }
+
+    .input{
+        width: 100%;
+        padding: 12px;
+        border-radius: 12px;
+        border: 1px solid #e5e7eb;
+        font-size: 14px;
+        outline: none;
+    }
+
+    .input:focus{
+        border-color: #c7cad1;
+        box-shadow: 0 0 0 4px rgba(17,24,39,.06);
+    }
+
+    .field{ margin-bottom: 14px; }
+
+    .settings-card label{
+        display:block;
+        margin-bottom: 6px;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .settings-grid{
+        margin-top: 12px;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .toggle-row{
+        display:flex;
+        align-items:flex-start;
+        justify-content:space-between;
+        gap: 14px;
+        padding: 10px 12px;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        background: var(--card);
+    }
+
+    .toggle-label{
+        margin: 0;
+        font-weight: 700;
+        font-size: 13px;
+    }
+
+    .hint{
+        display:block;
+        margin-top: 4px;
+        font-weight: 500;
+        color: var(--muted);
+        font-size: 12px;
+    }
+
+    .settings-actions{
+        margin-top: 14px;
+        display:flex;
+        align-items:center;
+        gap: 10px;
+    }
+
+    .save-note{
+        font-size: 13px;
+        color: var(--muted);
+    }
+
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="wrap topbar">
+      <div class="brand">
+        <div class="brand-badge">PP</div>
+        <div>Pomodoro Pal</div>
+      </div>
+
+      <nav class="nav">
+        <a class="active" href="dashboard.html">Timer</a>
+        <a href="todo.html">To-Do</a>
+        <a href="profile.html">Profile</a>
+        <a href="support.html">Support</a>
+      </nav>
+
+      <div class="actions">
+        <button class="btn" type="button" id="themeBtn" aria-label="Toggle theme">🌙</button>
+        <button class="btn" type="button">Help</button>
+        <button class="btn btn-dark" type="button" id="logoutBtn">Log out</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <h1 class="page-title">Dashboard</h1>
+    <p class="page-sub">Your focus sessions, whitelist, and streak — all in one place.</p>
+
+    <section class="grid">
+      <!-- Timer -->
+      <div class="card timer-card">
+        <div class="timer-top">
+          <div>
+            <h2 class="card-title">Pomodoro Timer</h2>
+            <p class="card-sub">Pick a mode and start your session.</p>
+          </div>
+
+          <div class="modes">
+            <button class="mode-btn active" type="button" data-min="25">Focus</button>
+            <button class="mode-btn" type="button" data-min="5">Short Break</button>
+            <button class="mode-btn" type="button" data-min="15">Long Break</button>
+          </div>
+        </div>
+
+        <div class="timer-mid">
+          <div class="time" id="timeDisplay">25:00</div>
+
+          <div class="progress">
+            <div class="progress-fill" style="width: 0%"></div>
+          </div>
+
+          <div class="timer-actions">
+            <button class="btn btn-dark" type="button" id="startPauseBtn">Start</button>
+            <button class="btn" type="button" id="resetBtn">Reset</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="card stats-card">
+        <div class="stats-top">
+          <div>
+            <h2 class="card-title">Focus Stats</h2>
+            <p class="card-sub">This week’s focus time</p>
+          </div>
+
+          <div class="today-box">
+            <div class="today-label">Today</div>
+            <div class="today-value" id="todayMinutesText">0m</div>
+            <div class="today-sub" id="todaySessionsText">0 sessions</div>
+          </div>
+        </div>
+
+        <div class="chart-wrap">
+          <canvas id="weekChart" height="160"></canvas>
+        </div>
+      </div>
+
+    <div class="card settings-card">
+        <div class="settings-top">
+            <div>
+            <h2 class="card-title">Settings</h2>
+            <p class="card-sub">Customize your Pomodoro.</p>
+            </div>
+        </div>
+
+        <div class="settings-grid">
+            <div class="field">
+                <label for="focusMin">Focus (minutes)</label>
+                <input id="focusMin" class="input" type="number" min="1" max="180" value="25">
+            </div>
+
+            <div class="field">
+                <label for="shortMin">Short break (minutes)</label>
+                <input id="shortMin" class="input" type="number" min="1" max="60" value="5">
+            </div>
+
+            <div class="field">
+                <label for="longMin">Long break (minutes)</label>
+                <input id="longMin" class="input" type="number" min="1" max="90" value="15">
+            </div>
+
+            <div class="toggle-row">
+                <label class="toggle-label" for="autoStartBreaks">
+                    Auto-start breaks
+                    <span class="hint">Starts break timer automatically after focus ends.</span>
+                </label>
+                <input id="autoStartBreaks" type="checkbox">
+            </div>
+
+            <div class="toggle-row">
+                <label class="toggle-label" for="soundOn">
+                    Sound
+                    <span class="hint">Play a sound when a session ends.</span>
+                </label>
+                <input id="soundOn" type="checkbox" checked>
+            </div>
+        </div>
+
+        <div class="settings-actions">
+            <button class="btn btn-dark" type="button" id="saveSettingsBtn">Save settings</button>
+            <span class="save-note" id="saveNote"></span>
+        </div>
+    </div>
+
+    </section>
+  </main>
+
+  <script>
+    // ---------- Theme (Light/Dark) ----------
+    const themeBtn = document.getElementById("themeBtn");
+
+    function setTheme(theme){
+        document.documentElement.setAttribute("data-theme", theme);
+        localStorage.setItem("pp_theme", theme);
+        themeBtn.textContent = (theme === "dark") ? "☀️" : "🌙";
+    }
+
+    const savedTheme = localStorage.getItem("pp_theme") || "light";
+    setTheme(savedTheme);
+
+    themeBtn.addEventListener("click", () => {
+        const current = document.documentElement.getAttribute("data-theme") || "light";
+        setTheme(current === "dark" ? "light" : "dark");
+    });
+
+    // ---------- Logout ----------
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      window.location.href = "login.html";
+    });
+
+    // ---------- Timer ----------
+    const timeDisplay = document.getElementById("timeDisplay");
+    const startPauseBtn = document.getElementById("startPauseBtn");
+    const resetBtn = document.getElementById("resetBtn");
+    const progressFill = document.querySelector(".progress-fill");
+    const modeButtons = document.querySelectorAll(".mode-btn");
+
+    let totalSeconds = 25 * 60;
+    let remainingSeconds = totalSeconds;
+    let timerId = null;
+    let running = false;
+
+    function formatTime(sec){
+      const m = Math.floor(sec / 60);
+      const s = sec % 60;
+      return `${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
+    }
+
+    function render(){
+      timeDisplay.textContent = formatTime(remainingSeconds);
+      const pct = totalSeconds === 0 ? 0 : ((totalSeconds - remainingSeconds) / totalSeconds) * 100;
+      progressFill.style.width = `${pct}%`;
+    }
+
+    function stopTimer(){
+      if (timerId) clearInterval(timerId);
+      timerId = null;
+      running = false;
+      startPauseBtn.textContent = "Start";
+    }
+
+    function startTimer(){
+      if (running) return;
+      running = true;
+      startPauseBtn.textContent = "Pause";
+
+      timerId = setInterval(() => {
+        if (remainingSeconds > 0) {
+          remainingSeconds -= 1;
+          render();
+        } else {
+          stopTimer();
+          startPauseBtn.textContent = "Done ✓";
+          setTimeout(() => { startPauseBtn.textContent = "Start"; }, 900);
+        }
+      }, 1000);
+    }
+
+    startPauseBtn.addEventListener("click", () => {
+      if (!running) startTimer();
+      else stopTimer();
+    });
+
+    resetBtn.addEventListener("click", () => {
+      stopTimer();
+      remainingSeconds = totalSeconds;
+      render();
+    });
+
+    modeButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        modeButtons.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+
+        const mins = Number(btn.dataset.min || 25);
+        totalSeconds = mins * 60;
+        remainingSeconds = totalSeconds;
+
+        stopTimer();
+        render();
+      });
+    });
+
+    // ---------- Stats / Chart ----------
+    const weekDataMinutes = [120, 95, 150, 60, 180, 30, 0]; // Mon..Sun example
+    const days = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+
+    // Label format for Y axis ticks: 0m, 30m, 1h, 2h, 3h...
+    function fmtTick(mins){
+      if (mins === 0) return "0m";
+      if (mins === 30) return "30m";
+      return `${Math.round(mins / 60)}h`;
+    }
+
+    // General format for "Today" box (can be 45m, 1h 15m, etc.)
+    function fmtHM(mins){
+      const h = Math.floor(mins / 60);
+      const m = mins % 60;
+      if (h === 0) return `${m}m`;
+      if (m === 0) return `${h}h`;
+      return `${h}h ${m}m`;
+    }
+
+    function drawWeekChart(data){
+      const canvas = document.getElementById("weekChart");
+      if (!canvas) return;
+      const ctx = canvas.getContext("2d");
+
+      // crisp on retina
+      const dpr = window.devicePixelRatio || 1;
+      const cssWidth = canvas.parentElement.clientWidth - 20;
+      canvas.style.width = cssWidth + "px";
+      canvas.style.height = "160px";
+      canvas.width = Math.floor(cssWidth * dpr);
+      canvas.height = Math.floor(160 * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0); // reset + scale
+
+      const w = cssWidth;
+      const h = 160;
+
+      ctx.clearRect(0, 0, w, h);
+
+      const padL = 44, padR = 10, padT = 10, padB = 28;
+      const chartW = w - padL - padR;
+      const chartH = h - padT - padB;
+
+      // niceMax rounded to whole hours
+      const maxVal = Math.max(...data, 60);
+      const niceMax = Math.ceil(maxVal / 60) * 60;
+
+      // ticks: 0m, 30m, 1h, 2h...
+      const tickVals = [0, 30];
+      for (let t = 60; t <= niceMax; t += 60) tickVals.push(t);
+
+      // grid + y labels
+      ctx.font = "12px system-ui";
+      ctx.fillStyle = "#6b7280";
+      ctx.strokeStyle = "#e5e7eb";
+      ctx.lineWidth = 1;
+
+      for (const val of tickVals){
+        const y = padT + chartH - (val / niceMax) * chartH;
+        ctx.beginPath();
+        ctx.moveTo(padL, y);
+        ctx.lineTo(padL + chartW, y);
+        ctx.stroke();
+
+        ctx.textAlign = "left";
+        ctx.fillText(fmtTick(val), 2, y + 4);
+      }
+
+      // bars centered to day labels
+      const gap = chartW / data.length;
+      const barW = gap * 0.28;    // thinner bars
+      const radius = 6;
+
+      for (let i = 0; i < data.length; i++){
+        const v = data[i];
+
+        const centerX = padL + i * gap + gap / 2;
+        const x = centerX - barW / 2;
+
+        // day label (always)
+        ctx.fillStyle = "#6b7280";
+        ctx.textAlign = "center";
+        ctx.fillText(days[i], centerX, padT + chartH + 20);
+
+        // skip 0 values (no bar at all)
+        if (v <= 0) continue;
+
+        ctx.fillStyle = "#111827";
+        const bh = (v / niceMax) * chartH;
+        const y = padT + (chartH - bh);
+        const r = Math.min(radius, barW / 2, bh / 2);
+
+        ctx.beginPath();
+        ctx.moveTo(x, y + r);
+        ctx.arcTo(x, y, x + r, y, r);
+        ctx.lineTo(x + barW - r, y);
+        ctx.arcTo(x + barW, y, x + barW, y + r, r);
+        ctx.lineTo(x + barW, y + bh);
+        ctx.lineTo(x, y + bh);
+        ctx.closePath();
+        ctx.fill();
+      }
+
+      ctx.textAlign = "left";
+    }
+
+    function updateStats(todaySessions, todayMinutes){
+      document.getElementById("todayMinutesText").textContent = fmtHM(todayMinutes);
+      document.getElementById("todaySessionsText").textContent = `${todaySessions} sessions`;
+    }
+
+    // demo data
+    drawWeekChart(weekDataMinutes);
+    updateStats(0, 0);
+
+    window.addEventListener("resize", () => drawWeekChart(weekDataMinutes));
+
+    // initial timer render
+    render();
+  </script>
+</body>
+</html>

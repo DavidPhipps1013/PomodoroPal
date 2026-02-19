@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Sign up</title>
+
+        <style>
+            :root{
+                --bg: #f3f4f6;
+                --card: #ffffff;
+                --text: #111827;
+                --border: #e5e7eb;
+                --radius: 18px;
+                --shadow: 0 18px 40px rgba(17,24,39,.10);
+            }
+
+            *{ box-sizing: border-box; }
+
+            body{
+                margin:0;
+                min-height:100vh;
+                display:grid;
+                place-items:center;
+                background: var(--bg);
+                color: var(--text);
+                font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+                padding: 24px;
+            }
+
+            .card{
+                width: 100%;
+                max-width: 420px;
+                background: var(--card);
+                border: 1px solid var(--border);
+                border-radius: var(--radius);
+                box-shadow: var(--shadow);
+                padding: 28px;
+            }
+
+            .title{
+                margin: 0 0 6px;
+                text-align: center;
+                font-size: 22px;
+                font-weight: 700;
+                letter-spacing: -0.02em;
+            }
+
+            .subtitle{
+                margin: 0 0 20px;
+                text-align: center;
+                font-size: 14px;
+                color: #6b7280;
+            }
+
+            .error{
+                display: none;
+                margin-bottom: 16px;
+                padding: 10px 12px;
+                border-radius: 12px;
+                border: 1px solid rgba(239,68,68,.35);
+                background: rgba(239,68,68,.08);
+                color: #991b1b;
+                font-size: 13px;
+            }
+
+            .field{
+                margin-bottom: 14px;
+            }
+
+            label{
+                display: block;
+                margin-bottom: 6px;
+                font-size: 13px;
+                font-weight: 600;
+            }
+
+            .input{
+                width: 100%;
+                padding: 12px;
+                border-radius: 12px;
+                border: 1px solid #e5e7eb;
+                font-size: 14px;
+                outline: none;
+            }
+
+            .input:focus{
+                border-color: #c7cad1;
+                box-shadow: 0 0 0 4px rgba(17,24,39,.06);
+            }
+
+            .password-wrap{
+                position: relative;
+            }
+
+            .toggle{
+                position: absolute;
+                top: 50%;
+                right: 10px;
+                transform: translateY(-50%);
+                padding: 6px 10px;
+                font-size: 12px;
+                font-weight: 600;
+                border-radius: 999px;
+                border: 1px solid #e5e7eb;
+                background: #ffffff;
+                cursor: pointer;
+            }
+
+            .toggle:hover{
+                box-shadow: 0 8px 16px rgba(17,24,39,.06);
+            }
+
+            .row{
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 12px;
+                margin: 10px 0 16px;
+                flex-wrap: wrap;
+            }
+
+            .remember{
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                font-size: 13px;
+                color: #6b7280;
+                user-select: none;
+            }
+
+            .link{
+                font-size: 13px;
+                font-weight: 600;
+                color: #111827;
+                text-decoration: none;
+            }
+
+            .link:hover{
+                text-decoration: underline;
+            }
+
+            .btn{
+                width: 100%;
+                padding: 12px 14px;
+                border-radius: 12px;
+                border: none;
+                background: #111827;
+                color: #ffffff;
+                font-size: 14px;
+                font-weight: 700;
+                cursor: pointer;
+            }
+
+            .btn:hover{
+            filter: brightness(1.05);
+            }
+
+            .signup-text{
+                margin-top: 16px;
+                text-align: center;
+                font-size: 13px;
+                color: #6b7280;
+            }
+
+            .signup-text a{
+                color: #111827;
+                font-weight: 700;
+                text-decoration: none;
+            }
+
+            .signup-text a:hover{
+                text-decoration: underline;
+            }
+
+            .label-row{
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 10px;
+            }
+
+            .match-badge{
+                display: none;
+                align-items: center;
+                gap: 6px;
+                font-size: 12px;
+                font-weight: 700;
+                color: #065f46;
+            }
+
+            .match-badge .tick{
+                width: 16px;
+                height: 16px;
+                border-radius: 999px;
+                display: grid;
+                place-items: center;
+                font-size: 11px;
+                background: rgba(16,185,129,.16);
+                border: 1px solid rgba(16,185,129,.35);
+                color: #065f46;
+            }
+
+            .meter{
+                margin-top: 10px;
+                margin-bottom: 24px;
+            }
+
+            .meter-top{
+                display:flex;
+                justify-content: space-between;
+                align-items:center;
+                font-size: 12px;
+                color: #6b7280;
+                margin-bottom: 6px;
+            }
+
+            .meter-text{
+                font-weight: 700;
+                color: #111827;
+            }
+
+            .meter-bar{
+                width: 100%;
+                height: 4px;
+                border-radius: 999px;
+                background: #e5e7eb;
+                overflow: hidden;
+            }
+
+            .meter-fill{
+                height: 100%;
+                width: 0%;
+                border-radius: 999px;
+                transition: width .2s ease;
+            }
+
+
+        </style>
+    </head>
+    <body>
+        <main class="card">
+            <h1 class="title">Create account</h1>
+            <p class="subtitle">Join Pomodoro Pal and start focusing.</p>
+
+            <div id="errorBox" class="error">
+                Please fix the errors and try again.
+            </div>
+
+            <form id="signupForm">
+                <div class="field">
+                    <label for="fullName">Full name</label>
+                    <input id="fullName" type="text" class="input" placeholder="Firstname Lastname" />
+                </div>
+
+                <div class="field">
+                    <label for="email">Email</label>
+                    <input id="email" type="email" class="input" placeholder="you@example.com" />
+                </div>
+
+                <div class="field">
+                    <label for="password">Password</label>
+                    <div class="password-wrap">
+                    <input id="password" type="password" class="input" placeholder="••••••••" />
+                    <button type="button" class="toggle" id="togglePassword">Show</button>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label for="confirmPassword" class="label-row">
+                        Confirm password
+                        <span id="matchBadge" class="match-badge" aria-live="polite"></span>
+                    </label>
+                    <div class="password-wrap">
+                    <input id="confirmPassword" type="password" class="input" placeholder="••••••••" />
+                    <button type="button" class="toggle" id="toggleConfirm">Show</button>
+                    </div>
+                </div>
+
+                <div class="meter">
+                    <div class="meter-top">
+                        <span class="meter-label">Strength:</span>
+                        <span id="strengthText" class="meter-text">—</span>
+                    </div>
+
+                    <div class="meter-bar">
+                        <div id="strengthFill" class="meter-fill"></div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn">Sign up</button>
+            </form>
+
+            <p class="signup-text">
+                Already have an account?
+                <a href="login.html">Log in</a>
+            </p>
+        </main>
+
+        <script>
+            function setupAutoHideToggle(inputId, buttonId, ms = 2000) {
+                const input = document.getElementById(inputId);
+                const btn = document.getElementById(buttonId);
+                let timer = null;
+
+                if (!input || !btn) return;
+
+                btn.addEventListener("click", () => {
+                const isHidden = input.type === "password";
+
+                if (timer) {
+                    clearTimeout(timer);
+                    timer = null;
+                }
+
+                if (isHidden) {
+                    input.type = "text";
+                    btn.textContent = "Hide";
+
+                    timer = setTimeout(() => {
+                    input.type = "password";
+                    btn.textContent = "Show";
+                    timer = null;
+                    }, ms);
+                } else {
+                    input.type = "password";
+                    btn.textContent = "Show";
+                }
+                });
+            }
+
+            setupAutoHideToggle("password", "togglePassword", 2000);
+            setupAutoHideToggle("confirmPassword", "toggleConfirm", 2000);
+
+    
+            const signupForm = document.getElementById("signupForm");
+            const errorBox = document.getElementById("errorBox");
+            const strengthFill = document.getElementById("strengthFill");
+            const strengthText = document.getElementById("strengthText");
+
+
+            const fullNameEl = document.getElementById("fullName");
+            const emailEl = document.getElementById("email");
+            const passwordEl = document.getElementById("password");
+            const confirmEl = document.getElementById("confirmPassword");
+            const matchBadge = document.getElementById("matchBadge");
+
+            function updateStrengthMeter(pw){
+                if (!strengthFill || !strengthText) return;
+
+                if (!pw) {
+                    strengthFill.style.width = "0%";
+                    strengthFill.style.background = "#9ca3af";
+                    strengthText.textContent = "—";
+                    return;
+                }
+
+                let score = 0;
+                if (pw.length >= 8) score++;
+                if (/[A-Z]/.test(pw)) score++;
+                if (/[a-z]/.test(pw)) score++;
+                if (/[0-9]/.test(pw)) score++;
+                if (/[^A-Za-z0-9]/.test(pw)) score++;
+                if (pw.length >= 12) score++; // bonus
+
+                // 0..6 => percent
+                const pct = Math.min(100, Math.round((score / 6) * 100));
+                strengthFill.style.width = pct + "%";
+
+                // label + color
+                if (score <= 2) {
+                    strengthText.textContent = "Weak";
+                    strengthFill.style.background = "#ef4444";
+                } else if (score <= 4) {
+                    strengthText.textContent = "Good";
+                    strengthFill.style.background = "#f59e0b";
+                } else {
+                    strengthText.textContent = "Strong";
+                    strengthFill.style.background = "#10b981";
+                }
+            }
+
+
+            function showError(msg) {
+                if (!errorBox) return;
+                errorBox.textContent = msg;
+                errorBox.style.display = "block";
+            }
+
+            function hideError() {
+                if (!errorBox) return;
+                errorBox.style.display = "none";
+            }
+
+            // Password requirements:
+            // 8+ chars, upper, lower, number, special
+            function passwordErrors(pw) {
+                const errs = [];
+                if (pw.length < 8) errs.push("at least 8 characters");
+                if (!/[A-Z]/.test(pw)) errs.push("1 uppercase letter");
+                if (!/[a-z]/.test(pw)) errs.push("1 lowercase letter");
+                if (!/[0-9]/.test(pw)) errs.push("1 number");
+                if (!/[^A-Za-z0-9]/.test(pw)) errs.push("1 special character");
+                return errs;
+            }
+
+            function updateMatchBadge() {
+                if (!matchBadge || !passwordEl || !confirmEl) return;
+
+                const pw = passwordEl.value;
+                const cpw = confirmEl.value;
+
+                if (!cpw) {
+                matchBadge.style.display = "none";
+                matchBadge.textContent = "";
+                return;
+                }
+
+                matchBadge.style.display = "inline-flex";
+
+                if (pw && pw === cpw) {
+                matchBadge.style.color = "#065f46";
+                matchBadge.innerHTML = `<span class="tick">✓</span> Match`;
+                } else {
+                matchBadge.style.color = "#991b1b";
+                matchBadge.innerHTML =
+                    `<span class="tick" style="background: rgba(239,68,68,.12); border-color: rgba(239,68,68,.35); color:#991b1b;">!</span> No match`;
+                }
+            }
+
+            // Live updates
+            [fullNameEl, emailEl, passwordEl, confirmEl].forEach(el => {
+                if (!el) return;
+                el.addEventListener("input", () => {
+                hideError();
+                if (el === passwordEl) updateStrengthMeter(passwordEl.value);
+                if (el === passwordEl || el === confirmEl) updateMatchBadge();
+                });
+            });
+
+            if (signupForm) {
+                signupForm.addEventListener("submit", (e) => {
+                e.preventDefault();
+                hideError();
+
+                const fullName = fullNameEl.value.trim();
+                const email = emailEl.value.trim();
+                const pw = passwordEl.value;
+                const cpw = confirmEl.value;
+
+                if (!fullName) return showError("Please enter your full name.");
+                if (!email) return showError("Please enter your email.");
+
+                const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+                if (!emailOk) return showError("Please enter a valid email address.");
+
+                const pwErrs = passwordErrors(pw);
+                if (pwErrs.length) {
+                    return showError("Password must have: " + pwErrs.join(", ") + ".");
+                }
+
+                if (pw !== cpw) {
+                    updateMatchBadge();
+                    return showError("Passwords do not match.");
+                }
+
+                // ✅ SUCCESS (backend later)
+                window.location.href = "login.html";
+                });
+            }
+
+            // Handle browser autofill
+            updateMatchBadge();
+            updateStrengthMeter(passwordEl.value);
+
+        </script>
+
+    </body>
+</html>
