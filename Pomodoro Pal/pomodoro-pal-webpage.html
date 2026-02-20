@@ -323,13 +323,13 @@
         .calendar-day {
             aspect-ratio: 1;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
             border-radius: 8px;
             background: rgba(255, 255, 255, 0.1);
             border: 2px solid transparent;
             font-size: 0.9rem;
+            font-weight: 500;
         }
 
         .calendar-day.checked {
@@ -365,18 +365,272 @@
             cursor: not-allowed;
         }
 
-        /* Guest vs Logged In Info */
-        .guest-info, .user-info-card {
-            margin: 2rem auto;
-            max-width: 600px;
-            padding: 1.5rem;
+        /* Login Prompt */
+        .login-prompt {
             background: linear-gradient(45deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
-            border-radius: 15px;
+            padding: 1rem;
+            border-radius: 10px;
             border: 2px solid var(--border-color);
+            margin: 1rem 0;
             text-align: center;
         }
 
-        /* Settings */
+        .login-prompt-btn {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 1rem;
+            font-weight: bold;
+        }
+
+        /* Timer Section */
+        .timer-container {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .timer-display {
+            font-size: 6rem;
+            font-weight: bold;
+            margin: 2rem 0;
+            color: var(--accent-color);
+            text-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+            font-family: monospace;
+        }
+
+        .timer-controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .timer-btn {
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .timer-btn.start {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .timer-btn.pause {
+            background: var(--warning-color);
+            color: white;
+        }
+
+        .timer-btn.reset {
+            background: var(--danger-color);
+            color: white;
+        }
+
+        .timer-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .timer-presets {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin: 2rem auto;
+            max-width: 400px;
+        }
+
+        .preset-btn {
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            color: var(--text-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .preset-btn:hover {
+            background: rgba(59, 130, 246, 0.2);
+            border-color: var(--accent-color);
+        }
+
+        .preset-btn.active {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .timer-mode-indicator {
+            font-size: 1.2rem;
+            margin: 1rem 0;
+            color: var(--accent-color);
+        }
+
+        .session-stats {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+
+        /* Todo Section */
+        .todo-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .todo-header {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .todo-input {
+            flex: 1;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            color: var(--text-color);
+            font-size: 1rem;
+        }
+
+        .todo-input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        .add-todo-btn {
+            padding: 0 2rem;
+            background: linear-gradient(45deg, var(--accent-color), var(--accent-secondary));
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .add-todo-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4);
+        }
+
+        .todo-filters {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn:hover {
+            background: rgba(59, 130, 246, 0.2);
+        }
+
+        .filter-btn.active {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .todo-list {
+            list-style: none;
+            margin-top: 1rem;
+        }
+
+        .todo-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .todo-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .todo-checkbox {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            accent-color: var(--success-color);
+        }
+
+        .todo-text {
+            flex: 1;
+            font-size: 1rem;
+        }
+
+        .todo-text.completed {
+            text-decoration: line-through;
+            opacity: 0.6;
+        }
+
+        .todo-delete {
+            padding: 0.5rem 1rem;
+            background: var(--danger-color);
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .todo-delete:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(239, 68, 68, 0.4);
+        }
+
+        .todo-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 2rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+
+        .clear-completed {
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid var(--border-color);
+            border-radius: 5px;
+            color: var(--text-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .clear-completed:hover {
+            background: var(--danger-color);
+            color: white;
+        }
+
+        /* Settings Section */
         .settings-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -430,25 +684,26 @@
             left: 26px;
         }
 
-        /* Login Prompt */
-        .login-prompt {
-            background: linear-gradient(45deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
-            padding: 1rem;
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
             border-radius: 10px;
-            border: 2px solid var(--border-color);
-            margin: 1rem 0;
-            text-align: center;
+            color: white;
+            font-weight: bold;
+            z-index: 10000;
+            animation: slideIn 0.3s ease;
         }
 
-        .login-prompt-btn {
-            background: var(--accent-color);
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-left: 1rem;
-            font-weight: bold;
+        .notification.success { background: var(--success-color); }
+        .notification.error { background: var(--danger-color); }
+        .notification.info { background: var(--accent-color); }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
         }
 
         /* Responsive Design */
@@ -468,13 +723,16 @@
                 font-size: 2rem;
             }
             
-            .calendar-header {
-                flex-direction: column;
-                text-align: center;
+            .timer-display {
+                font-size: 4rem;
             }
             
-            .calendar-grid {
-                grid-template-columns: repeat(7, 1fr);
+            .todo-header {
+                flex-direction: column;
+            }
+            
+            .add-todo-btn {
+                padding: 1rem;
             }
         }
 
@@ -487,8 +745,20 @@
                 font-size: 0.8rem;
             }
             
-            .feature-card {
-                padding: 1rem;
+            .timer-display {
+                font-size: 3rem;
+            }
+            
+            .timer-presets {
+                grid-template-columns: 1fr;
+            }
+            
+            .todo-filters {
+                flex-wrap: wrap;
+            }
+            
+            .filter-btn {
+                flex: 1;
             }
         }
     </style>
@@ -525,14 +795,13 @@
             <div class="avatar" id="user-avatar">U</div>
             <div>
                 <div id="user-name">User</div>
-                <div style="font-size: 0.8rem; opacity: 0.8;" id="user-level">Guest</div>
+                <div style="font-size: 0.8rem; opacity: 0.8;" id="user-level">Level 1</div>
             </div>
             <button class="nav-btn" onclick="logout()" style="margin-left: 1rem;">Logout</button>
         </div>
         <div class="nav-links">
             <button class="nav-btn active" onclick="showSection('home')">🏠 Home</button>
-            <button class="nav-btn" onclick="showSection('todo')">📝 To-Do List</button>
-            <button class="nav-btn" onclick="showSection('games')">🎮 Games</button>
+            <button class="nav-btn" onclick="showSection('todo')">📝 To-Do</button>
             <button class="nav-btn" onclick="showSection('timer')">⏱️ Timer</button>
             <button class="nav-btn" onclick="showSection('leaderboard')">🏆 Leaderboard</button>
             <button class="nav-btn" onclick="showSection('settings')">⚙️ Settings</button>
@@ -546,7 +815,7 @@
         <div id="home" class="content-section active">
             <div class="hero">
                 <h1>Welcome to Pomodoropal</h1>
-                <p>We blend the Pomodoro Technique with gamification, community challenges, and smart tracking to make every study session engaging and rewarding.</p>
+                <p>Boost your productivity with the Pomodoro Technique, track your tasks, and build consistent study habits.</p>
             </div>
 
             <!-- Check-in Calendar -->
@@ -557,71 +826,119 @@
                         🔥 <span id="streak-count">0</span> Day Streak
                     </div>
                 </div>
-                <div id="calendar-status" style="text-align: center; margin-bottom: 1rem; color: var(--accent-color);">
-                    <!-- Status message will appear here -->
-                </div>
-                <div class="calendar-grid" id="calendar-grid">
-                    <!-- Calendar will be generated here -->
-                </div>
+                <div class="calendar-grid" id="calendar-grid"></div>
                 <button class="check-in-btn" id="check-in-btn" onclick="markCheckin()">
                     ✅ Check-in Today
                 </button>
-                <div style="text-align: center; margin-top: 1rem; color: var(--accent-color);">
-                    <div>Monthly Goal: <span id="month-goal">0</span>/30 days</div>
+                <div style="text-align: center; margin-top: 1rem;">
+                    <div>Monthly Progress: <span id="month-checkins">0</span>/30 days</div>
                     <progress id="month-progress" value="0" max="30" style="width: 100%; margin-top: 0.5rem;"></progress>
                 </div>
             </div>
 
-            <!-- Features Grid with Clickable Cards -->
+            <!-- Features Grid -->
             <div class="features-grid">
                 <div class="feature-card" onclick="showSection('timer')">
                     <div class="feature-icon">⏱️</div>
-                    <h3>Study Timer</h3>
-                    <p>Pomodoro timer with focus sessions and breaks</p>
+                    <h3>Timer</h3>
+                    <p>Focus with Pomodoro technique</p>
                 </div>
                 <div class="feature-card" onclick="showSection('todo')">
                     <div class="feature-icon">📝</div>
                     <h3>To-Do List</h3>
-                    <p>Helps you track and prioritize tasks</p>
-                </div>
-                <div class="feature-card" onclick="showSection('games')">
-                    <div class="feature-icon">🎮</div>
-                    <h3>Educational Games</h3>
-                    <p>Fun games that improve memory and skills</p>
+                    <p>Track and manage your tasks</p>
                 </div>
                 <div class="feature-card" onclick="showSection('leaderboard')">
                     <div class="feature-icon">🏆</div>
-                    <h3>Leaderboards</h3>
-                    <p>Compete on study checkpoints and scores</p>
+                    <h3>Leaderboard</h3>
+                    <p>Compete with other users</p>
+                </div>
+                <div class="feature-card" onclick="showSection('settings')">
+                    <div class="feature-icon">⚙️</div>
+                    <h3>Settings</h3>
+                    <p>Customize your experience</p>
                 </div>
             </div>
 
-            <!-- Guest vs Logged In Info -->
-            <div id="guest-info" class="login-prompt" style="display: none; margin-top: 2rem;">
-                <p>🔓 <strong>You're browsing as a guest!</strong> Login to save your progress, track stats, and compete on leaderboards.</p>
-                <button class="login-prompt-btn" onclick="openAuthModal()">Login / Register Now</button>
+            <!-- Guest Info -->
+            <div id="guest-info" class="login-prompt" style="display: none;">
+                <p>👋 You're browsing as a guest. Login to save your progress and compete on leaderboards!</p>
+                <button class="login-prompt-btn" onclick="openAuthModal()">Login / Register</button>
             </div>
             
-            <div id="user-info-card" style="display: none; background: linear-gradient(45deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1)); padding: 1.5rem; border-radius: 15px; margin-top: 2rem; border: 2px solid var(--border-color);">
-                <h3 style="color: var(--accent-color); margin-bottom: 0.5rem;">Welcome back, <span id="welcome-name">User</span>! 👋</h3>
-                <p style="margin-bottom: 1rem;">You're on a <strong><span id="streak-count-2">0</span>-day streak</strong>! Keep up the great work!</p>
-                <div id="user-stats" style="font-size: 0.9rem; opacity: 0.8;"></div>
+            <!-- User Info -->
+            <div id="user-info-card" class="login-prompt" style="display: none;">
+                <p>👋 Welcome back, <span id="welcome-name"></span>!</p>
+                <p id="user-stats"></p>
             </div>
-        </div> <!-- THIS IS THE MISSING CLOSING DIV FOR HOME SECTION -->
+        </div>
+
+        <!-- To-Do Section -->
+        <div id="todo" class="content-section">
+            <h1 style="text-align: center; margin-bottom: 2rem;">📝 To-Do List</h1>
+            
+            <div class="todo-container">
+                <div class="todo-header">
+                    <input type="text" class="todo-input" id="todo-input" placeholder="Add a new task..." maxlength="100">
+                    <button class="add-todo-btn" onclick="addTodo()">Add Task</button>
+                </div>
+                
+                <div class="todo-filters">
+                    <button class="filter-btn active" onclick="filterTodos('all')">All</button>
+                    <button class="filter-btn" onclick="filterTodos('active')">Active</button>
+                    <button class="filter-btn" onclick="filterTodos('completed')">Completed</button>
+                </div>
+                
+                <ul class="todo-list" id="todo-list"></ul>
+                
+                <div class="todo-stats">
+                    <span id="todo-count">0 tasks remaining</span>
+                    <button class="clear-completed" onclick="clearCompleted()">Clear Completed</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Timer Section -->
+        <div id="timer" class="content-section">
+            <h1 style="text-align: center; margin-bottom: 1rem;">⏱️ Pomodoro Timer</h1>
+            
+            <div class="timer-container">
+                <div class="timer-mode-indicator" id="timer-mode">Focus Time</div>
+                <div class="timer-display" id="timer-display">25:00</div>
+                
+                <div class="timer-controls">
+                    <button class="timer-btn start" onclick="startTimer()">▶ Start</button>
+                    <button class="timer-btn pause" onclick="pauseTimer()">⏸ Pause</button>
+                    <button class="timer-btn reset" onclick="resetTimer()">↺ Reset</button>
+                </div>
+                
+                <div class="timer-presets">
+                    <button class="preset-btn active" onclick="setTimerMode('focus')">🎯 Focus (25m)</button>
+                    <button class="preset-btn" onclick="setTimerMode('short')">☕ Short Break (5m)</button>
+                    <button class="preset-btn" onclick="setTimerMode('long')">🌿 Long Break (15m)</button>
+                </div>
+                
+                <div class="session-stats">
+                    <div>🎯 Focus Sessions: <span id="focus-sessions">0</span></div>
+                    <div>⏱️ Total Time: <span id="total-time">0</span> min</div>
+                </div>
+            </div>
+        </div>
+
+
 
         <!-- Settings Section -->
         <div id="settings" class="content-section">
-            <h1 style="text-align: center; margin-bottom: 1rem;">⚙️ Settings</h1>
-            <p style="text-align: center; margin-bottom: 2rem; opacity: 0.8;">Customize your Pomodoropal experience</p>
+            <h1 style="text-align: center; margin-bottom: 2rem;">⚙️ Settings</h1>
             
             <div id="settings-guest-info" class="login-prompt" style="display: none;">
-                <p>🔒 <strong>Login to save your settings!</strong> Customizations will be saved to your account.</p>
+                <p>🔒 Login to save your settings and sync across devices.</p>
                 <button class="login-prompt-btn" onclick="openAuthModal()">Login Now</button>
             </div>
             
             <div class="settings-grid">
                 <div class="setting-card">
-                    <h3 style="color: var(--accent-color); margin-bottom: 1rem;">🎨 Appearance</h3>
+                    <h3 style="margin-bottom: 1rem;">🎨 Appearance</h3>
                     <div class="setting-option">
                         <span>Dark/Light Mode</span>
                         <div class="toggle" id="theme-toggle" onclick="toggleTheme()"></div>
@@ -634,153 +951,173 @@
                             <option value="large">Large</option>
                         </select>
                     </div>
-                    <div class="setting-option">
-                        <span>Accent Color</span>
-                        <input type="color" id="accent-color" value="#3b82f6" onchange="changeAccentColor(this.value)">
-                    </div>
                 </div>
-
+                
                 <div class="setting-card">
-                    <h3 style="color: var(--accent-color); margin-bottom: 1rem;">🔔 Notifications</h3>
-                    <div class="setting-option">
-                        <span>Check-in Reminders</span>
-                        <div class="toggle active" id="checkin-reminder" onclick="toggleSetting('checkinReminder')"></div>
-                    </div>
-                    <div class="setting-option">
-                        <span>Break Reminders</span>
-                        <div class="toggle active" id="break-reminder" onclick="toggleSetting('breakReminder')"></div>
-                    </div>
+                    <h3 style="margin-bottom: 1rem;">🔔 Notifications</h3>
                     <div class="setting-option">
                         <span>Sound Effects</span>
                         <div class="toggle active" id="sound-effects" onclick="toggleSetting('soundEffects')"></div>
                     </div>
-                </div>
-
-                <div class="setting-card">
-                    <h3 style="color: var(--accent-color); margin-bottom: 1rem;">📊 Study Goals</h3>
                     <div class="setting-option">
-                        <span>Daily Goal (hours)</span>
-                        <input type="number" id="daily-goal" value="2" min="0.5" max="12" step="0.5" onchange="updateGoal('daily', this.value)">
-                    </div>
-                    <div class="setting-option">
-                        <span>Weekly Goal (days)</span>
-                        <input type="number" id="weekly-goal" value="5" min="1" max="7" step="1" onchange="updateGoal('weekly', this.value)">
-                    </div>
-                    <div class="setting-option">
-                        <span>Monthly Goal (days)</span>
-                        <input type="number" id="monthly-goal" value="20" min="1" max="31" step="1" onchange="updateGoal('monthly', this.value)">
+                        <span>Browser Notifications</span>
+                        <div class="toggle active" id="browser-notifications" onclick="toggleSetting('browserNotifications')"></div>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- END Settings Section -->
-
-        <!-- TODO: Add other sections (todo, games, timer, leaderboard) here -->
-        
     </div>
 
     <script>
-        // ============ AUTHENTICATION SYSTEM ============
+        // ============ GLOBAL STATE ============
         let currentUser = null;
-        let users = JSON.parse(localStorage.getItem('studyUsers')) || [];
+        let users = JSON.parse(localStorage.getItem('pomodoropal_users')) || [];
         let isLoggedIn = false;
+        
+        // Timer variables
+        let timerInterval = null;
+        let timerSeconds = 25 * 60;
+        let timerRunning = false;
+        let timerMode = 'focus';
+        let focusSessions = 0;
+        let totalMinutes = 0;
+        
+        // To-Do variables
+        let todos = [];
+        let currentFilter = 'all';
+        
 
-        // Initialize on page load
+        // ============ INITIALIZATION ============
         window.onload = function() {
-            const savedUser = localStorage.getItem('currentUser');
-            if (savedUser) {
-                try {
-                    currentUser = JSON.parse(savedUser);
-                    isLoggedIn = true;
-                    updateUIForUser();
-                } catch (e) {
-                    console.error('Error loading user data:', e);
-                    logout();
-                }
-            } else {
-                updateUIForGuest();
-            }
-            
-            loadAllData(); // Load all data
-            generateCalendar(); // Generate calendar
-            updateLeaderboard(); // Update leaderboard
+            initializeData();
+            loadUserFromStorage();
+            updateUI();
+            generateCalendar();
+            loadTodos();
+            updateTimerDisplay();
         };
 
-        // Opens the authentication modal
+        function initializeData() {
+            // Create default admin user if no users exist
+            if (users.length === 0) {
+                const defaultUser = {
+                    id: '1',
+                    username: 'demo',
+                    password: 'demo123',
+                    createdAt: new Date().toISOString(),
+                    checkins: {},
+                    stats: {
+                        streak: 0,
+                        totalCheckins: 0,
+                        focusSessions: 0,
+                        totalMinutes: 0,
+                        level: 1
+                    },
+                    settings: {
+                        theme: 'dark',
+                        fontSize: 'medium',
+                        soundEffects: true,
+                        browserNotifications: true
+                    },
+                    todos: []
+                };
+                users.push(defaultUser);
+                saveUsers();
+            }
+        }
+
+        function loadUserFromStorage() {
+            const savedUser = localStorage.getItem('pomodoropal_currentUser');
+            if (savedUser) {
+                try {
+                    const userId = savedUser;
+                    currentUser = users.find(u => u.id === userId);
+                    if (currentUser) {
+                        isLoggedIn = true;
+                        if (currentUser.settings?.theme === 'light') {
+                            document.body.classList.add('light-mode');
+                            document.getElementById('theme-toggle').classList.add('active');
+                        }
+                        focusSessions = currentUser.stats?.focusSessions || 0;
+                        totalMinutes = currentUser.stats?.totalMinutes || 0;
+                        todos = currentUser.todos || [];
+                    }
+                } catch (e) {
+                    console.error('Error loading user:', e);
+                }
+            }
+        }
+
+        // ============ NOTIFICATION SYSTEM ============
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            setTimeout(() => notification.remove(), 3000);
+        }
+
+        // ============ AUTH FUNCTIONS ============
         function openAuthModal() {
             document.getElementById('auth-modal').classList.add('active');
         }
 
-        // Closes the authentication modal
         function closeAuthModal() {
             document.getElementById('auth-modal').classList.remove('active');
         }
 
-        // Switches between login and register forms
         function showAuthForm(form) {
-            document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active')); 
+            document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
             document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
-            
             document.getElementById(form + '-form').classList.add('active');
             document.querySelector(`.auth-tab[onclick="showAuthForm('${form}')"]`).classList.add('active');
         }
 
-        // Logs in a user with the given username and password.
         function login(event) {
             event.preventDefault();
-            
             const username = document.getElementById('login-username').value.trim();
             const password = document.getElementById('login-password').value.trim();
             
-            if (!username || !password) {
-                alert('Please fill in all fields');
-                return;
-            }
-            
-            // Find the user with the given username and password
             const user = users.find(u => u.username === username && u.password === password);
             if (user) {
                 currentUser = user;
                 isLoggedIn = true;
-                localStorage.setItem('currentUser', JSON.stringify(user));
+                localStorage.setItem('pomodoropal_currentUser', user.id);
                 
-                updateUIForUser();
-                closeAuthModal();
-                loadUserData();
+                focusSessions = user.stats?.focusSessions || 0;
+                totalMinutes = user.stats?.totalMinutes || 0;
+                todos = user.todos || [];
+                
+                updateUI();
                 generateCalendar();
-                updateLeaderboard();
-                
-                alert('Login successful! Welcome back ' + username + '!');
+                renderTodoList();
+                closeAuthModal();
+                showNotification(`Welcome back, ${username}!`, 'success');
             } else {
-                alert('Invalid username or password');
+                showNotification('Invalid username or password', 'error');
             }
         }
 
-        // Registers a new user with the given username and password.
         function register(event) {
             event.preventDefault();
-            
             const username = document.getElementById('register-username').value.trim();
             const password = document.getElementById('register-password').value.trim();
             
-            // Checks if username and password are valid
-            if (!username || username.length < 3) {
-                alert('Username must be at least 3 characters');
+            if (username.length < 3) {
+                showNotification('Username must be at least 3 characters', 'error');
                 return;
             }
             
-            // Checks if password is valid
-            if (!password || password.length < 6) {
-                alert('Password must be at least 6 characters');
+            if (password.length < 6) {
+                showNotification('Password must be at least 6 characters', 'error');
                 return;
             }
-            // Checks if username already exists
+            
             if (users.some(u => u.username === username)) {
-                alert('Username already exists');
+                showNotification('Username already exists', 'error');
                 return;
             }
             
-            // Creates a new user
             const newUser = {
                 id: Date.now().toString(),
                 username: username,
@@ -788,127 +1125,119 @@
                 createdAt: new Date().toISOString(),
                 checkins: {},
                 stats: {
-                    checkpoints: 0,
                     streak: 0,
-                    totalHours: 0,
-                    level: 1,
-                    xp: 0
-                },
-                // Initialize game stats
-                games: {
-                    // Add game stats here
+                    totalCheckins: 0,
+                    focusSessions: 0,
+                    totalMinutes: 0,
+                    level: 1
                 },
                 settings: {
                     theme: 'dark',
                     fontSize: 'medium',
-                    accentColor: '#3b82f6'
-                }
+                    soundEffects: true,
+                    browserNotifications: true
+                },
+                todos: []
             };
             
-            // Adds the new user to the users array
             users.push(newUser);
-            localStorage.setItem('studyUsers', JSON.stringify(users));
+            saveUsers();
             
-            // Sets the current user to the new user
             currentUser = newUser;
-            isLoggedIn = true; 
-            localStorage.setItem('currentUser', JSON.stringify(newUser)); // Update local storage
+            isLoggedIn = true;
+            localStorage.setItem('pomodoropal_currentUser', newUser.id);
             
-            updateUIForUser(); // Update UI
-            closeAuthModal(); // Close auth modal
-            generateCalendar(); // Generate calendar
-            updateLeaderboard(); // Update leaderboard
+            todos = [];
+            focusSessions = 0;
+            totalMinutes = 0;
             
-            alert('Registration successful! Welcome to Pomodoropal!');
+            updateUI();
+            generateCalendar();
+            renderTodoList();
+            closeAuthModal();
+            showNotification('Registration successful! Welcome to Pomodoropal!', 'success');
         }
 
-        // Logs out the current user
         function logout() {
             currentUser = null;
             isLoggedIn = false;
-            localStorage.removeItem('currentUser');
+            localStorage.removeItem('pomodoropal_currentUser');
+            todos = [];
+            focusSessions = 0;
+            totalMinutes = 0;
             
-            updateUIForGuest(); // Update UI
-            generateCalendar(); // Generate calendar
-            updateLeaderboard(); // Update leaderboard
-            
-            alert('Logged out successfully');
+            updateUI();
+            generateCalendar();
+            renderTodoList();
+            showNotification('Logged out successfully', 'info');
         }
 
-        // Updates the UI for a logged-in user
-        function updateUIForUser() {
-            // Update nav
-            document.getElementById('user-info').style.display = 'flex'; // Show user info
-            document.getElementById('login-btn').style.display = 'none'; // Hide login button
-            document.getElementById('user-avatar').textContent = currentUser.username.charAt(0).toUpperCase(); // Set user avatar
-            document.getElementById('user-name').textContent = currentUser.username; // Set user name
-            document.getElementById('user-level').textContent = `Level ${currentUser.stats.level || 1}`; // Set user level
-            
-            // Update home page
-            document.getElementById('guest-info').style.display = 'none'; // Hide guest info
-            document.getElementById('user-info-card').style.display = 'block'; // Show user info card
-            document.getElementById('welcome-name').textContent = currentUser.username; // Set welcome name
-            // Set user stats
-            document.getElementById('user-stats').textContent = 
-                `Level ${currentUser.stats.level || 1} | ${currentUser.stats.checkpoints || 0} checkpoints | ${currentUser.stats.streak || 0}-day streak`;
-            
-            // Update settings
-            document.getElementById('settings-guest-info').style.display = 'none';
-            
-            // Enable check-in button
-            document.getElementById('check-in-btn').disabled = false;
-            updateCheckinButton();
+        function saveUsers() {
+            localStorage.setItem('pomodoropal_users', JSON.stringify(users));
         }
 
-        // Updates the UI for a guest
-        function updateUIForGuest() {
-            // Update nav
-            document.getElementById('user-info').style.display = 'none';
-            document.getElementById('login-btn').style.display = 'block';
-            
-            // Update home page
-            document.getElementById('guest-info').style.display = 'block';
-            document.getElementById('user-info-card').style.display = 'none';
-            
-            // Update settings
-            document.getElementById('settings-guest-info').style.display = 'block';
-            
-            // Disable check-in button for guests
-            document.getElementById('check-in-btn').disabled = true;
-            document.getElementById('calendar-status').innerHTML = '<p>🔒 Login to use the check-in calendar!</p>';
-        }
-
-        // Shows a section and updates the active nav button
-        function showSection(sectionId) {
-            // Hide all sections
-            document.querySelectorAll('.content-section').forEach(section => {
-                section.classList.remove('active');
-            });
-            
-            // Show selected section
-            document.getElementById(sectionId).classList.add('active');
-            
-            // Update active nav button
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            
-            // Find and activate the corresponding button
-            const buttons = document.querySelectorAll('.nav-btn');
-            for (let btn of buttons) {
-                if (btn.textContent.includes(sectionId.charAt(0).toUpperCase() + sectionId.slice(1).toLowerCase())) {
-                    btn.classList.add('active');
-                    break;
+        function saveUserData() {
+            if (isLoggedIn && currentUser) {
+                const index = users.findIndex(u => u.id === currentUser.id);
+                if (index !== -1) {
+                    users[index] = currentUser;
+                    saveUsers();
                 }
             }
-            
-            // Special case for login button
-            if (sectionId === 'home') {
-                document.querySelector('.nav-btn[onclick="showSection(\'home\')"]').classList.add('active');
-            }
         }
 
-        // Generates the calendar for the current month.
+        // ============ UI UPDATE FUNCTIONS ============
+        function updateUI() {
+            const userInfo = document.getElementById('user-info');
+            const loginBtn = document.getElementById('login-btn');
+            const guestInfo = document.getElementById('guest-info');
+            const userCard = document.getElementById('user-info-card');
+            const settingsGuestInfo = document.getElementById('settings-guest-info');
+            
+            if (isLoggedIn && currentUser) {
+                userInfo.style.display = 'flex';
+                loginBtn.style.display = 'none';
+                guestInfo.style.display = 'none';
+                userCard.style.display = 'block';
+                settingsGuestInfo.style.display = 'none';
+                
+                document.getElementById('user-avatar').textContent = currentUser.username.charAt(0).toUpperCase();
+                document.getElementById('user-name').textContent = currentUser.username;
+                document.getElementById('user-level').textContent = `Level ${currentUser.stats?.level || 1}`;
+                document.getElementById('welcome-name').textContent = currentUser.username;
+                document.getElementById('user-stats').textContent = 
+                    `${currentUser.stats?.totalCheckins || 0} check-ins • ${currentUser.stats?.focusSessions || 0} sessions`;
+                
+                document.getElementById('check-in-btn').disabled = false;
+            } else {
+                userInfo.style.display = 'none';
+                loginBtn.style.display = 'block';
+                guestInfo.style.display = 'block';
+                userCard.style.display = 'none';
+                settingsGuestInfo.style.display = 'block';
+                
+                document.getElementById('check-in-btn').disabled = true;
+            }
+            
+            updateCheckinButton();
+            updateTimerStats();
+        }
+
+        function showSection(sectionId) {
+            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+            
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            const activeBtn = Array.from(document.querySelectorAll('.nav-btn')).find(b => 
+                b.textContent.includes(sectionId === 'todo' ? 'To-Do' : 
+                    sectionId.charAt(0).toUpperCase() + sectionId.slice(1))
+            );
+            if (activeBtn) activeBtn.classList.add('active');
+            
+            if (sectionId === 'todo') renderTodoList();
+        }
+
+        // ============ CALENDAR FUNCTIONS ============
         function generateCalendar() {
             const grid = document.getElementById('calendar-grid');
             if (!grid) return;
@@ -916,213 +1245,312 @@
             grid.innerHTML = '';
             
             const today = new Date();
-            const currentMonth = today.getMonth();
-            const currentYear = today.getFullYear();
-            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+            const year = today.getFullYear();
+            const month = today.getMonth();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const firstDay = new Date(year, month, 1).getDay();
             
-            // Get first day of month (0 = Sunday, 1 = Monday, etc.)
-            const firstDay = new Date(currentYear, currentMonth, 1).getDay();
-            
-            // Add empty cells for days before the first day of month
+            // Add empty cells
             for (let i = 0; i < firstDay; i++) {
-                const emptyDay = document.createElement('div');
-                emptyDay.className = 'calendar-day';
-                emptyDay.style.opacity = '0.3';
-                emptyDay.innerHTML = '<div></div>';
-                grid.appendChild(emptyDay);
+                grid.appendChild(createDayCell());
             }
             
-            // Get user's check-in data
+            // Add days
             const checkins = currentUser?.checkins || {};
+            let monthCheckins = 0;
             
-            // Generate days
             for (let i = 1; i <= daysInMonth; i++) {
-                const dayDate = new Date(currentYear, currentMonth, i);
-                const dateStr = dayDate.toISOString().split('T')[0];
-                const isToday = i === today.getDate() && currentMonth === today.getMonth() && currentYear === today.getFullYear();
+                const date = new Date(year, month, i);
+                const dateStr = date.toISOString().split('T')[0];
+                const isToday = i === today.getDate();
                 const isChecked = checkins[dateStr];
                 
-                const dayEl = document.createElement('div');
-                dayEl.className = `calendar-day ${isChecked ? 'checked' : ''} ${isToday ? 'today' : ''}`; 
-                dayEl.innerHTML = `
-                    <div style="font-weight: ${isToday ? 'bold' : 'normal'}">${i}</div>
-                `; 
-                // Add border if today
-                if (isToday) {
-                    dayEl.style.border = `2px solid ${isChecked ? '#10b981' : '#f59e0b'}`;
-                }
+                if (isChecked) monthCheckins++;
                 
-                grid.appendChild(dayEl); // Append day to grid
+                const cell = createDayCell(i, isChecked, isToday);
+                grid.appendChild(cell);
             }
             
-            // Update stats
+            document.getElementById('month-checkins').textContent = monthCheckins;
+            document.getElementById('month-progress').value = monthCheckins;
+            
             if (currentUser) {
-                document.getElementById('streak-count').textContent = currentUser.stats.streak || 0;
-                const monthCheckins = Object.keys(checkins).filter(d => {
-                    const date = new Date(d);
-                    return date.getMonth() === currentMonth && date.getFullYear() === currentYear;
-                }).length;
-                
-                document.getElementById('month-goal').textContent = monthCheckins;
-                document.getElementById('month-progress').value = monthCheckins;
-                
-                document.getElementById('calendar-status').innerHTML = 
-                    `<p>📅 ${currentUser.username}, you have ${monthCheckins} check-ins this month. Keep it up!</p>`;
-            } else {
-                document.getElementById('streak-count').textContent = '0';
-                document.getElementById('month-goal').textContent = '0';
-                document.getElementById('month-progress').value = 0;
+                document.getElementById('streak-count').textContent = currentUser.stats?.streak || 0;
             }
-            
-            updateCheckinButton();
         }
-        
-        // Updates the check-in button based on the user's login status and check-in history.
+
+        function createDayCell(day = '', isChecked = false, isToday = false) {
+            const cell = document.createElement('div');
+            cell.className = `calendar-day ${isChecked ? 'checked' : ''} ${isToday ? 'today' : ''}`;
+            if (day) cell.innerHTML = `<div>${day}</div>`;
+            return cell;
+        }
+
         function updateCheckinButton() {
             const btn = document.getElementById('check-in-btn');
-            if (!isLoggedIn) {
+            if (!isLoggedIn || !currentUser) {
                 btn.disabled = true;
                 btn.textContent = '🔒 Login to Check-in';
                 return;
             }
             
             const today = new Date().toISOString().split('T')[0];
-            const alreadyChecked = currentUser.checkins && currentUser.checkins[today];
+            const alreadyChecked = currentUser.checkins?.[today];
             
-            if (alreadyChecked) {
-                btn.disabled = true;
-                btn.textContent = '✅ Already Checked-in Today';
-            } else {
-                btn.disabled = false;
-                btn.textContent = '✅ Check-in Today';
-            }
+            btn.disabled = !!alreadyChecked;
+            btn.textContent = alreadyChecked ? '✅ Already Checked-in' : '✅ Check-in Today';
         }
 
         function markCheckin() {
             if (!isLoggedIn || !currentUser) {
-                alert('Please login to check in');
                 openAuthModal();
                 return;
             }
             
             const today = new Date().toISOString().split('T')[0];
             
-            // Initialize checkins object if it doesn't exist
-            if (!currentUser.checkins) {
-                currentUser.checkins = {};
-            }
-            
-            // Check if already checked in today
-            if (currentUser.checkins[today]) {
-                alert('You have already checked in today!');
+            if (currentUser.checkins?.[today]) {
+                showNotification('Already checked in today!', 'info');
                 return;
             }
             
-            // Mark check-in for today
+            if (!currentUser.checkins) currentUser.checkins = {};
             currentUser.checkins[today] = true;
             
             // Update streak
-            if (!currentUser.stats) currentUser.stats = {};
-            
-            // Calculate streak
             const dates = Object.keys(currentUser.checkins).sort();
-            let streak = 0;
-            let currentDate = new Date();
+            let streak = 1;
+            let checkDate = new Date(today);
             
-            for (let i = 0; i < dates.length; i++) {
-                const checkinDate = new Date(dates[dates.length - 1 - i]);
-                const diffTime = Math.abs(currentDate - checkinDate);
-                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            for (let i = dates.length - 2; i >= 0; i--) {
+                const prevDate = new Date(dates[i]);
+                const diffDays = Math.round((checkDate - prevDate) / (1000 * 60 * 60 * 24));
                 
-                if (diffDays === i) {
+                if (diffDays === 1) {
                     streak++;
+                    checkDate = prevDate;
                 } else {
                     break;
                 }
             }
             
+            if (!currentUser.stats) currentUser.stats = {};
             currentUser.stats.streak = streak;
-            currentUser.stats.checkpoints = (currentUser.stats.checkpoints || 0) + 1;
+            currentUser.stats.totalCheckins = (currentUser.stats.totalCheckins || 0) + 1;
             
-            // Save user data
             saveUserData();
-            
-            // Update UI
             generateCalendar();
-            updateUIForUser();
+            updateUI();
             
-            alert('✅ Check-in successful! Keep up the good work!');
+            showNotification('✅ Check-in successful! +10 XP', 'success');
         }
 
-        // ============ Todo list functions ============
-        // ============ GAMES ============
-        // Game state variables
-        // Load game data
-        // Save game data
-        // Load user data
-        // Game Navigation
-        // Back to Games
-        // ============ TIMER ============
-        // Timer page navigation
-        // ============ LEADERBOARD ============
-        // Show leaderboard
+        // ============ TODO FUNCTIONS ============
+        function loadTodos() {
+            if (isLoggedIn && currentUser?.todos) {
+                todos = currentUser.todos;
+            } else {
+                // Load guest todos from localStorage
+                const saved = localStorage.getItem('pomodoropal_guest_todos');
+                todos = saved ? JSON.parse(saved) : [];
+            }
+            renderTodoList();
+        }
+
+        function saveTodos() {
+            if (isLoggedIn && currentUser) {
+                currentUser.todos = todos;
+                saveUserData();
+            } else {
+                localStorage.setItem('pomodoropal_guest_todos', JSON.stringify(todos));
+            }
+        }
+
+        function addTodo() {
+            const input = document.getElementById('todo-input');
+            const text = input.value.trim();
+            
+            if (!text) {
+                showNotification('Please enter a task', 'error');
+                return;
+            }
+            
+            const todo = {
+                id: Date.now().toString(),
+                text: text,
+                completed: false,
+                createdAt: new Date().toISOString()
+            };
+            
+            todos.push(todo);
+            saveTodos();
+            renderTodoList();
+            input.value = '';
+            
+            showNotification('Task added', 'success');
+        }
+
+        function renderTodoList() {
+            const list = document.getElementById('todo-list');
+            const countSpan = document.getElementById('todo-count');
+            
+            let filteredTodos = todos;
+            if (currentFilter === 'active') {
+                filteredTodos = todos.filter(t => !t.completed);
+            } else if (currentFilter === 'completed') {
+                filteredTodos = todos.filter(t => t.completed);
+            }
+            
+            list.innerHTML = '';
+            filteredTodos.forEach(todo => {
+                const li = document.createElement('li');
+                li.className = 'todo-item';
+                li.innerHTML = `
+                    <input type="checkbox" class="todo-checkbox" ${todo.completed ? 'checked' : ''} 
+                           onchange="toggleTodo('${todo.id}')">
+                    <span class="todo-text ${todo.completed ? 'completed' : ''}">${escapeHtml(todo.text)}</span>
+                    <button class="todo-delete" onclick="deleteTodo('${todo.id}')">Delete</button>
+                `;
+                list.appendChild(li);
+            });
+            
+            const remaining = todos.filter(t => !t.completed).length;
+            countSpan.textContent = `${remaining} task${remaining !== 1 ? 's' : ''} remaining`;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function toggleTodo(id) {
+            const todo = todos.find(t => t.id === id);
+            if (todo) {
+                todo.completed = !todo.completed;
+                saveTodos();
+                renderTodoList();
+            }
+        }
+
+        function deleteTodo(id) {
+            todos = todos.filter(t => t.id !== id);
+            saveTodos();
+            renderTodoList();
+            showNotification('Task deleted', 'info');
+        }
+
+        function filterTodos(filter) {
+            currentFilter = filter;
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            renderTodoList();
+        }
+
+        function clearCompleted() {
+            todos = todos.filter(t => !t.completed);
+            saveTodos();
+            renderTodoList();
+            showNotification('Completed tasks cleared', 'info');
+        }
+
+        // ============ TIMER FUNCTIONS ============
+        function updateTimerDisplay() {
+            const mins = Math.floor(timerSeconds / 60);
+            const secs = timerSeconds % 60;
+            document.getElementById('timer-display').textContent = 
+                `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function updateTimerStats() {
+            document.getElementById('focus-sessions').textContent = focusSessions;
+            document.getElementById('total-time').textContent = totalMinutes;
+        }
+
+        function setTimerMode(mode) {
+            timerMode = mode;
+            
+            document.querySelectorAll('.preset-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            let minutes = mode === 'focus' ? 25 : mode === 'short' ? 5 : 15;
+            timerSeconds = minutes * 60;
+            
+            document.getElementById('timer-mode').textContent = 
+                mode === 'focus' ? '🎯 Focus Time' : mode === 'short' ? '☕ Short Break' : '🌿 Long Break';
+            
+            updateTimerDisplay();
+            pauseTimer();
+        }
+
+        function startTimer() {
+            if (timerRunning) return;
+            
+            timerRunning = true;
+            timerInterval = setInterval(() => {
+                timerSeconds--;
+                updateTimerDisplay();
+                
+                if (timerSeconds <= 0) {
+                    completeTimer();
+                }
+            }, 1000);
+            
+            showNotification('Timer started', 'info');
+        }
+
+        function pauseTimer() {
+            clearInterval(timerInterval);
+            timerRunning = false;
+        }
+
+        function resetTimer() {
+            pauseTimer();
+            setTimerMode(timerMode);
+        }
+
+        function completeTimer() {
+            pauseTimer();
+            
+            if (timerMode === 'focus') {
+                focusSessions++;
+                totalMinutes += 25;
+                
+                if (isLoggedIn && currentUser) {
+                    if (!currentUser.stats) currentUser.stats = {};
+                    currentUser.stats.focusSessions = focusSessions;
+                    currentUser.stats.totalMinutes = totalMinutes;
+                    saveUserData();
+                }
+                
+                updateTimerStats();
+                updateLeaderboard();
+                
+                showNotification('🎉 Focus session complete! Time for a break!', 'success');
+                
+                // Auto-start break if enabled
+                setTimeout(() => {
+                    setTimerMode('short');
+                    startTimer();
+                }, 3000);
+            } else {
+                showNotification('Break time is over! Ready to focus?', 'info');
+                setTimeout(() => {
+                    setTimerMode('focus');
+                }, 3000);
+            }
+        }
 
         // ============ SETTINGS FUNCTIONS ============
-        function loadUserSettings() {
-            if (!currentUser || !currentUser.settings) return;
-            
-            const settings = currentUser.settings;
-            
-            if (settings.theme === 'light') {
-                document.getElementById('theme-toggle').classList.add('active');
-                document.body.classList.add('light-mode');
-            }
-            
-            if (settings.fontSize) {
-                document.getElementById('font-size').value = settings.fontSize;
-                changeFontSize(settings.fontSize);
-            }
-            
-            if (settings.accentColor) {
-                document.getElementById('accent-color').value = settings.accentColor;
-                changeAccentColor(settings.accentColor);
-            }
-            
-            if (settings.checkinReminder) {
-                document.getElementById('checkin-reminder').classList.add('active');
-            }
-            
-            if (settings.breakReminder) {
-                document.getElementById('break-reminder').classList.add('active');
-            }
-            
-            if (settings.soundEffects) {
-                document.getElementById('sound-effects').classList.add('active');
-            }
-            
-            if (currentUser.goals) {
-                document.getElementById('daily-goal').value = currentUser.goals.daily || 2;
-                document.getElementById('weekly-goal').value = currentUser.goals.weekly || 5;
-                document.getElementById('monthly-goal').value = currentUser.goals.monthly || 20;
-            }
-        }
-
         function toggleTheme() {
             const toggle = document.getElementById('theme-toggle');
             toggle.classList.toggle('active');
+            document.body.classList.toggle('light-mode');
             
-            if (toggle.classList.contains('active')) {
-                document.body.classList.add('light-mode');
-                if (isLoggedIn && currentUser) {
-                    currentUser.settings.theme = 'light';
-                    saveUserData();
-                }
-            } else {
-                document.body.classList.remove('light-mode');
-                if (isLoggedIn && currentUser) {
-                    currentUser.settings.theme = 'dark';
-                    saveUserData();
-                }
+            if (isLoggedIn && currentUser) {
+                if (!currentUser.settings) currentUser.settings = {};
+                currentUser.settings.theme = toggle.classList.contains('active') ? 'light' : 'dark';
+                saveUserData();
             }
         }
 
@@ -1130,16 +1558,8 @@
             document.body.style.fontSize = size === 'small' ? '14px' : size === 'medium' ? '16px' : '18px';
             
             if (isLoggedIn && currentUser) {
+                if (!currentUser.settings) currentUser.settings = {};
                 currentUser.settings.fontSize = size;
-                saveUserData();
-            }
-        }
-
-        function changeAccentColor(color) {
-            document.documentElement.style.setProperty('--accent-color', color);
-            
-            if (isLoggedIn && currentUser) {
-                currentUser.settings.accentColor = color;
                 saveUserData();
             }
         }
@@ -1151,15 +1571,8 @@
             toggle.classList.toggle('active');
             
             if (isLoggedIn && currentUser) {
+                if (!currentUser.settings) currentUser.settings = {};
                 currentUser.settings[setting] = toggle.classList.contains('active');
-                saveUserData();
-            }
-        }
-
-        function updateGoal(type, value) {
-            if (isLoggedIn && currentUser) {
-                if (!currentUser.goals) currentUser.goals = {};
-                currentUser.goals[type] = parseFloat(value);
                 saveUserData();
             }
         }
