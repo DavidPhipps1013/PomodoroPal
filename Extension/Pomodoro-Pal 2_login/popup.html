@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Pomodoro Pal</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      :root{
+        --bg: #0b1020;
+        --card: rgba(255,255,255,0.08);
+        --card2: rgba(255,255,255,0.12);
+        --text: rgba(255,255,255,0.92);
+        --muted: rgba(255,255,255,0.68);
+        --border: rgba(255,255,255,0.14);
+        --accent: #ffdd00;
+        --accent-2: #ffd000;
+        --accent-3: #ff9c00;
+        --accent-soft: rgba(255,221,0,0.18);
+        --good: #27c27a;
+        --warn: #ffb020;
+        --danger: #ff7600;
+        --shadow: 0 12px 30px rgba(0,0,0,0.35);
+        --radius: 16px;
+      }
+
+      * { box-sizing: border-box; }
+
+      body{
+        margin:0;
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+        width: 320px;
+        min-height: 460px;
+        color: var(--text);
+        background:#181818;
+        padding: 14px;
+      }
+
+      .header{
+        display:flex;
+        align-items:center;
+        gap:10px;
+        margin-bottom: 10px;
+      }
+
+      .logo-wrap{
+        width:40px;
+        height:40px;
+        border-radius: 12px;
+        background: none;
+        box-shadow: none;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        flex-shrink: 0;
+      }
+
+      .logo{
+        width: 60px;
+        height:60px;
+        object-fit: contain;
+        image-rendering: pixelated;
+      }
+
+      h1{
+        font-size: 18px;
+        margin:0;
+        line-height: 1.1;
+      }
+
+      .title-center{
+        text-align:center;
+        margin: 4px 0 14px;
+      }
+
+      .title-center h2{
+        margin: 8px 0 2px;
+        font-size: 20px;
+      }
+
+      .card{
+        background: var(--card);
+        border: 1px solid #ff9c00;
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        padding: 12px;
+      }
+
+      .login-card{
+        border: 1px solid var(--accent-3);
+        box-shadow: 0 12px 30px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,156,0,0.12);
+      }
+
+      .hidden{
+        display:none;
+      }
+
+      .grid{
+        display:grid;
+        grid-template-columns: 1fr 1fr;
+        gap:10px;
+        margin-top: 10px;
+      }
+
+      label{
+        display:block;
+        font-size: 12px;
+        color: var(--muted);
+        margin-bottom: 6px;
+      }
+
+      input[type="number"],
+      input[type="email"],
+      input[type="password"],
+      textarea{
+        width:100%;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        background: var(--card2);
+        color: var(--text);
+        padding: 10px 10px;
+        outline: none;
+        font-size: 14px;
+      }
+
+      input[type="number"]{
+        height: 40px;
+      }
+
+      input[type="email"],
+      input[type="password"]{
+        height: 42px;
+      }
+
+      input:focus,
+      textarea:focus{
+        border-color: rgba(255,221,0,0.65);
+        box-shadow: 0 0 0 3px rgba(255,221,0,0.18);
+      }
+
+      .whitelist{
+        margin-top: 10px;
+      }
+
+      textarea{
+        height: 92px;
+        resize: vertical;
+        line-height: 1.35;
+      }
+
+      .actions{
+        display:flex;
+        gap:10px;
+        margin-top: 12px;
+      }
+
+      .actions.tight{
+        margin-top: 16px;
+      }
+
+      button{
+        flex:1;
+        height: 40px;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        background: rgba(255,255,255,0.10);
+        color: var(--text);
+        font-weight: 650;
+        cursor: pointer;
+        transition: transform 0.06s ease, background 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
+      }
+
+      button:hover{
+        background: rgba(255,255,255,0.14);
+        border-color: rgba(255,255,255,0.20);
+      }
+
+      button:active{
+        transform: translateY(1px);
+      }
+
+      .logout-btn{
+        width: 100%;
+        display: block;
+        margin: 14px auto 10px;
+
+        padding: 8px 14px;
+        border: 1px solid #ff9c00;
+        border-radius: 8px;
+
+        background: transparent;
+        color: var(--text);
+
+        font-size: 13px;
+        font-weight: 400; 
+
+        cursor: pointer;
+      }
+      .logout-btn:hover {
+        border: 1px solid #ff9c00;
+        background: rgba(255, 156, 0, 0.12);
+      }
+
+      .primary{
+        background: linear-gradient(135deg, rgba(255,221,0,0.95), rgba(255,156,0,0.95));
+        border-color: rgba(255,221,0,0.55);
+        color: #171717;
+      }
+
+      .primary:hover{
+        background: linear-gradient(135deg, rgba(255,221,0,1), rgba(255,156,0,1));
+      }
+
+      .secondary{
+        background: rgba(255,255,255,0.10);
+        border-color: rgba(255,255,255,0.16);
+      }
+
+      .ghost{
+        flex: 0 0 auto;
+        width: auto;
+        padding: 0 12px;
+      }
+
+      .row{
+        display:flex;
+        align-items:center;
+        justify-content: space-between;
+        margin-top: 12px;
+      }
+
+      .pill{
+        font-size: 11px;
+        font-weight: 700;
+        padding: 6px 10px;
+        border-radius: 8px;
+        border: 1px solid rgba(255,255,255,0.16);
+        background: rgba(255,255,255,0.08);
+      }
+
+      .pill.focus{
+        border-color: rgba(255,221,0,0.55);
+        background: rgba(255,221,0,0.14);
+      }
+
+      .pill.break{
+        border-color: rgba(39,194,122,0.55);
+        background: rgba(39,194,122,0.14);
+      }
+
+      .pill.stopped{
+        border-color: rgba(255,255,255,0.18);
+        background: rgba(255,255,255,0.08);
+      }
+
+      .time{
+        font-size: 26px;
+        font-weight: 800;
+        color: #ffffff;
+      }
+
+      .hint{
+        display: block;
+        width: 100%;
+        margin-top: 8px;
+        font-size: 12px;
+        color: #aaa;
+        line-height: 1.4;
+        text-align: left;
+        max-width: none;
+      }
+
+      .hint strong{
+        color: #ff9c00;
+      }
+
+      .status-message{
+        min-height: 18px;
+        margin-top: 10px;
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      .status-message.error{
+        color: #ffb4b4;
+      }
+
+      .status-message.success{
+        color: #a6f3c5;
+      }
+
+      .welcome-row{
+        display:flex;
+        align-items:center;
+        justify-content: space-between;
+        gap: 8px;
+        margin-top: 2px;
+        margin-bottom: 8px;
+      }
+
+      .welcome-text{
+        font-size: 12px;
+        color: var(--muted);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="loginView">
+      <div class="title-center">
+        <div class="logo-wrap" style="margin: 0 auto 8px;">
+          <img class="logo" src="images/PomodoroClockLogo.png" alt="Pomodoro Pal logo" />
+        </div>
+        <h2>Log In</h2>
+      </div>
+
+      <div class="card login-card">
+        <label for="emailInput">Email</label>
+        <input id="emailInput" type="email" placeholder="name@example.com" autocomplete="email" required />
+
+        <div style="margin-top: 12px;">
+          <label for="passwordInput">Password</label>
+          <input id="passwordInput" type="password" placeholder="Password" autocomplete="current-password" required />
+        </div>
+
+        <div class="actions tight">
+          <button id="loginBtn" class="primary">Log In</button>
+          <button id="signupBtn" class="secondary">Sign Up</button>
+        </div>
+
+        <div id="loginStatus" class="status-message"></div>
+      </div>
+    </div>
+
+    <div id="appView" class="hidden">
+      <div class="header">
+        <div class="logo-wrap">
+          <img class="logo" src="images/PomodoroClockLogo.png" alt="Pomodoro Pal logo" />
+        </div>
+        <div>
+          <h1>Pomodoro Pal</h1>
+          <div class="subtitle">Whitelist-only browsing during focus.</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="welcome-row">
+          <div id="welcomeText" class="welcome-text">Signed in</div>
+        </div>
+
+        <div class="grid">
+          <div>
+            <label for="focusInput">Focus (min)</label>
+            <input id="focusInput" type="number" min="1" value="25" />
+          </div>
+          <div>
+            <label for="breakInput">Break (min)</label>
+            <input id="breakInput" type="number" min="1" value="5" />
+          </div>
+        </div>
+
+        <div class="whitelist">
+          <label for="whitelist">Whitelisted sites (one per line)</label>
+          <textarea id="whitelist" placeholder="github.com&#10;docs.google.com"></textarea>
+        </div>
+
+        <div class="actions">
+          <button id="startBtn" class="primary">Start</button>
+          <button id="stopBtn" class="secondary">Stop</button>
+        </div>
+
+        <div class="row">
+          <div id="phasePill" class="pill stopped">STOPPED</div>
+          <div id="timeRemaining" class="time">00m 00s</div>
+        </div>
+
+        <button id="logoutBtn" class="logout-btn">Log Out</button>
+
+        <div class="hint">
+          <strong>Tip:</strong> add hostnames like youtube.com or docs.google.com.
+          Subdomains are allowed automatically (e.g. mail.google.com matches google.com).
+        </div>
+      </div>
+    </div>
+
+    <script src="popup.js"></script>
+  </body>
+</html>

@@ -1,0 +1,34 @@
+{
+    "manifest_version": 3,
+    "name": "Pomodoro Pal",
+    "version": "1.0",
+    "description": "Block non-whitelisted websites during Pomodoro focus sessions.",
+    "permissions": [
+        "storage",
+        "tabs",
+        "alarms",
+        "scripting"
+    ],
+    "host_permissions": [
+        "<all_urls>"
+    ],
+    "background": {
+        "service_worker": "background.js"
+    },
+    "action": {
+        "default_icon": "images/PomodoroClockLogo.png",
+        "default_title": "Pomodoro Pal",
+        "default_popup": "popup.html"
+    },
+    "content_scripts": [
+        {
+            "matches": ["<all_urls>"],
+            "js": ["content.js"],
+            "run_at": "document_start"
+        }
+    ],
+    "web_accessible_resources": [{
+      "resources": ["images/*", "blocked.html"],
+      "matches": ["<all_urls>"]
+    }]
+}
